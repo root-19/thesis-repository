@@ -16,7 +16,7 @@
                         <span class="text-[#EB5E28]">Explore Research.</span>
                     </h1>
                     <p class="text-lg md:text-xl text-[#403D39] leading-relaxed max-w-3xl mx-auto mb-8">
-                        Access thesis papers, capstone projects, and scholarly documents uploaded by administrators. Search by title, author, department, or keyword to find the research you need.
+                        Access thesis papers, capstone projects, and scholarly documents uploaded by administrators. Search by title, author, or keyword to find the research you need.
                     </p>
 
                     <!-- Quick Stats -->
@@ -26,12 +26,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <span class="font-semibold">{{ $stats['total'] }} Thesis Documents</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-[#403D39]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#2b8c62]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                            <span class="font-semibold">{{ $stats['departments'] }} Departments</span>
                         </div>
                         <div class="flex items-center gap-2 text-[#403D39]">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#403D39]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
