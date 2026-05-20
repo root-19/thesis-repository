@@ -51,7 +51,21 @@ class UserMessageController extends Controller
 
     public function index(): View
     {
-        $authors = User::where('role', 'author')->get();
+        // Get only authors that the current user has messaged with
+        $messagedAuthorIds = Message::where(function ($query) {
+            $query->where('sender_id', auth()->id())
+                ->orWhere('receiver_id', auth()->id());
+        })->pluck('sender_id')
+            ->merge(Message::where(function ($query) {
+                $query->where('sender_id', auth()->id())
+                    ->orWhere('receiver_id', auth()->id());
+            })->pluck('receiver_id'))
+            ->unique()
+            ->toArray();
+
+        $authors = User::where('role', 'author')
+            ->whereIn('id', $messagedAuthorIds)
+            ->get();
 
         return view('user-messages', compact('authors'));
     }

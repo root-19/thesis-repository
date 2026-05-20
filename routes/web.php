@@ -17,84 +17,20 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-    $authors = User::query()
-        ->select(['name', 'email', 'created_at'])
-        ->orderBy('name')
-        ->get()
-        ->map(function (User $user) {
-            return [
-                'name' => $user->name,
-                'email' => $user->email,
-                'thesis_title' => $user->thesis_title ?? null,
-                'department' => $user->department ?? null,
-                'year' => optional($user->created_at)->format('Y'),
-                'tags' => collect($user->tags ?? [])->filter()->values()->all(),
-            ];
-        });
-
-    if ($authors->isEmpty()) {
-        $authors = collect([
-            [
-                'name' => 'Dr. Althea Ramirez',
-                'email' => 'althea.ramirez@example.com',
-                'thesis_title' => 'Adaptive Learning Models for Academic Libraries',
-                'department' => 'Information Science',
-                'year' => 2025,
-                'tags' => ['machine learning', 'academic libraries', 'student success'],
-            ],
-            [
-                'name' => 'Prof. Malik Soriano',
-                'email' => 'malik.soriano@example.com',
-                'thesis_title' => 'Resilient Microgrid Design for Coastal Communities',
-                'department' => 'Electrical Engineering',
-                'year' => 2024,
-                'tags' => ['sustainability', 'microgrids', 'renewable energy'],
-            ],
-            [
-                'name' => 'Engr. Zhen Liu',
-                'email' => 'zhen.liu@example.com',
-                'thesis_title' => 'Human-Centered Interfaces for Assistive Robotics',
-                'department' => 'Computer Engineering',
-                'year' => 2023,
-                'tags' => ['human-computer interaction', 'robotics', 'accessibility'],
-            ],
-            [
-                'name' => 'Ma. Sofia Delos Reyes',
-                'email' => 'sofia.delosreyes@example.com',
-                'thesis_title' => 'Community Mapping for Climate Adaptation Strategies',
-                'department' => 'Urban Planning',
-                'year' => 2025,
-                'tags' => ['climate action', 'urban analytics', 'community research'],
-            ],
-            [
-                'name' => 'Dr. Liam Hutcherson',
-                'email' => 'liam.hutcherson@example.com',
-                'thesis_title' => 'Biometric Signals for Early Cognitive Decline Detection',
-                'department' => 'Biomedical Sciences',
-                'year' => 2022,
-                'tags' => ['biometrics', 'neuroscience', 'predictive modeling'],
-            ],
-            [
-                'name' => 'Cherise Ocampo',
-                'email' => 'cherise.ocampo@example.com',
-                'thesis_title' => 'Story-driven Visualizations for Cultural Heritage Archives',
-                'department' => 'Digital Humanities',
-                'year' => 2024,
-                'tags' => ['data storytelling', 'heritage studies', 'visual design'],
-            ],
-        ]);
-    }
+    $theses = \App\Models\Thesis::with(['user', 'coAuthors'])
+        ->orderBy('created_at', 'desc')
+        ->get();
 
     $stats = [
-        'total' => $authors->count(),
-        'departments' => $authors->pluck('department')->filter()->unique()->count(),
-        'years' => $authors->pluck('year')->filter()->unique()->count(),
+        'total' => $theses->count(),
+        'departments' => $theses->pluck('department')->filter()->unique()->count(),
+        'years' => $theses->pluck('thesis_date')->map(fn($date) => $date->format('Y'))->filter()->unique()->count(),
+        'downloads' => $theses->count() * 15, // Estimate based on thesis count
     ];
 
-    return view('welcome', [
-        'authors' => $authors,
-        'stats' => $stats,
-    ]);
+    $departments = $theses->pluck('department')->filter()->unique()->sort()->values();
+
+    return view('welcome', compact('theses', 'stats', 'departments'));
 });
 
 Route::get('/author/dashboard', function () {
@@ -131,18 +67,41 @@ Route::post('/author/messages/{user}', [App\Http\Controllers\Author\MessageContr
     ->middleware(['auth'])
     ->name('author.messages.send');
 
+Route::get('/author/recommend', [App\Http\Controllers\AuthorRecommendationController::class, 'create'])
+    ->middleware(['auth'])
+    ->name('author.recommendation.create');
+
+Route::post('/author/recommend', [App\Http\Controllers\AuthorRecommendationController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('author.recommendation.store');
+
+Route::get('/author/team', [App\Http\Controllers\AuthorRecommendationController::class, 'team'])
+    ->middleware(['auth'])
+    ->name('author.team');
+
 Route::get('/dashboard', function () {
-    if (auth()->user()?->isAdmin()) {
-        return redirect()->route('admin.dashboard');
+    if (auth()->check()) {
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif (auth()->user()->isAuthor()) {
+            return redirect()->route('author.dashboard');
+        } else {
+            return redirect()->route('user.dashboard');
+        }
     }
+    return redirect()->route('login');
+})->middleware(['auth'])->name('dashboard');
 
-    if (auth()->user()?->isAuthor()) {
-        return redirect()->route('author.dashboard');
-    }
-
-    $theses = App\Models\Thesis::with(['user', 'comments.user', 'comments.replies.user', 'reactions.user', 'coAuthors'])
-        ->orderBy('created_at', 'desc')
-        ->get();
+Route::get('/user/dashboard', function () {
+    $user = auth()->user();
+    $theses = \App\Models\Thesis::with(['user', 'comments.user', 'comments.replies.user', 'reactions.user', 'coAuthors', 'savedByUsers'])
+        ->get()
+        ->sortByDesc(function ($thesis) use ($user) {
+            // Sort by saved status first (saved = 1, not saved = 0)
+            $isSaved = $thesis->savedByUsers()->where('users.id', $user->id)->exists() ? 1 : 0;
+            // Then sort by created_at
+            return [$isSaved, $thesis->created_at->timestamp];
+        });
 
     $stats = [
         'total' => $theses->count(),
@@ -153,7 +112,11 @@ Route::get('/dashboard', function () {
     $departments = $theses->pluck('department')->unique()->values();
 
     return view('dashboard', compact('theses', 'stats', 'departments'));
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])->name('user.dashboard');
+
+Route::post('/thesis/{thesis}/save', [\App\Http\Controllers\DashboardController::class, 'saveThesis'])
+    ->middleware(['auth'])
+    ->name('thesis.save');
 
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
@@ -190,6 +153,14 @@ Route::post('/admin/theses', [App\Http\Controllers\Admin\ThesisController::class
 Route::delete('/admin/theses/{thesis}', [App\Http\Controllers\Admin\ThesisController::class, 'destroy'])
     ->middleware(['auth'])
     ->name('admin.theses.destroy');
+
+Route::get('/admin/theses/{thesis}/edit', [App\Http\Controllers\Admin\ThesisController::class, 'edit'])
+    ->middleware(['auth'])
+    ->name('admin.theses.edit');
+
+Route::put('/admin/theses/{thesis}', [App\Http\Controllers\Admin\ThesisController::class, 'update'])
+    ->middleware(['auth'])
+    ->name('admin.theses.update');
 
 Route::get('/admin/feed', function () {
     $theses = App\Models\Thesis::with(['user', 'comments.user', 'comments.replies.user', 'reactions.user', 'coAuthors'])
@@ -232,6 +203,10 @@ Route::post('/user/messages/{author}', [App\Http\Controllers\UserMessageControll
     ->middleware(['auth'])
     ->name('user.messages.send');
 
+Route::get('/admin/author-team', [App\Http\Controllers\AuthorRecommendationController::class, 'userTeam'])
+    ->middleware(['auth'])
+    ->name('admin.author.team');
+
 Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])
     ->middleware(['auth'])
     ->name('notifications.index');
@@ -264,6 +239,18 @@ Route::post('/co-author-applications/{application}/reject', [App\Http\Controller
     ->middleware(['auth'])
     ->name('co-author-application.reject');
 
+Route::get('/admin/author-recommendations', [App\Http\Controllers\AuthorRecommendationController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('author.recommendations.index');
+
+Route::post('/author-recommendations/{recommendation}/approve', [App\Http\Controllers\AuthorRecommendationController::class, 'approve'])
+    ->middleware(['auth'])
+    ->name('author.recommendation.approve');
+
+Route::post('/author-recommendations/{recommendation}/reject', [App\Http\Controllers\AuthorRecommendationController::class, 'reject'])
+    ->middleware(['auth'])
+    ->name('author.recommendation.reject');
+
 Route::get('/theses/{thesis}/co-authors', [App\Http\Controllers\ThesisCoAuthorController::class, 'create'])
     ->middleware(['auth'])
     ->name('thesis.co-author.create');
@@ -284,10 +271,9 @@ Route::get('/search-users', function (Request $request) {
     $query = $request->get('q', '');
     
     $users = \App\Models\User::where('name', 'like', "%{$query}%")
-        ->where('role', 'author')
         ->where('id', '!=', auth()->id())
         ->limit(10)
-        ->get(['id', 'name', 'email', 'profile_image_path']);
+        ->get(['id', 'name', 'email', 'profile_image_path', 'role']);
     
     return response()->json($users);
 })->middleware(['auth'])

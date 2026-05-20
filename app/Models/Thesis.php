@@ -20,6 +20,7 @@ class Thesis extends Model
         'department',
         'author',
         'pdf_file_path',
+        'keywords',
     ];
 
     protected $casts = [
@@ -44,5 +45,10 @@ class Thesis extends Model
     public function coAuthors(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'thesis_co_author', 'thesis_id', 'user_id');
+    }
+
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'saved_theses', 'thesis_id', 'user_id')->withTimestamps();
     }
 }

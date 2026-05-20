@@ -21,6 +21,12 @@
                         <x-nav-link :href="route('co-author-applications.index')" :active="request()->routeIs('co-author-applications.index')">
                             {{ __('Approval for Authors') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('author.recommendations.index')" :active="request()->routeIs('author.recommendations.index')">
+                            {{ __('Author Recommendations') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.author.team')" :active="request()->routeIs('admin.author.team')">
+                            {{ __('Author Team') }}
+                        </x-nav-link>
                     @elseif (auth()->user()?->isAuthor())
                         <x-nav-link :href="route('author.dashboard')" :active="request()->routeIs('author.dashboard')">
                             {{ __('Dashboard') }}
@@ -31,15 +37,21 @@
                         <x-nav-link :href="route('author.inbox')" :active="request()->routeIs('author.inbox')">
                             {{ __('Inbox') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('author.team')" :active="request()->routeIs('author.team')">
+                            {{ __('Author Team') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('co-author-application.create')" :active="request()->routeIs('co-author-application.create')">
                             {{ __('Apply as Co-Author') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('author.recommendation.create')" :active="request()->routeIs('author.recommendation.create')">
+                            {{ __('Recommend Author') }}
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
                         <x-nav-link :href="route('user.messages')" :active="request()->routeIs('user.messages')">
-                            {{ __('Message Admin') }}
+                            {{ __('Message') }}
                         </x-nav-link>
                         <x-nav-link :href="route('co-author-application.create')" :active="request()->routeIs('co-author-application.create')">
                             {{ __('Apply as Co-Author') }}
@@ -132,18 +144,30 @@
                 <x-responsive-nav-link :href="route('co-author-applications.index')" :active="request()->routeIs('co-author-applications.index')">
                     {{ __('Approval for Authors') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('author.recommendations.index')" :active="request()->routeIs('author.recommendations.index')">
+                    {{ __('Author Recommendations') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.author.team')" :active="request()->routeIs('admin.author.team')">
+                    {{ __('Author ') }}
+                </x-responsive-nav-link>
             @elseif (auth()->user()?->isAuthor())
                 <x-responsive-nav-link :href="route('author.dashboard')" :active="request()->routeIs('author.dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('author.feed')" :active="request()->routeIs('author.feed')">
-                    {{ __('Feed') }}
+                    {{ __('NewsFeed') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('author.inbox')" :active="request()->routeIs('author.inbox')">
                     {{ __('Inbox') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('author.team')" :active="request()->routeIs('author.team')">
+                    {{ __('Author') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('co-author-application.create')" :active="request()->routeIs('co-author-application.create')">
                     {{ __('Apply as Co-Author') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('author.recommendation.create')" :active="request()->routeIs('author.recommendation.create')">
+                    {{ __('Recommend Author') }}
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">

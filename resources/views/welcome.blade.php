@@ -50,9 +50,9 @@
 </head>
 <body class="antialiased">
     @php
-        $authorCollection = collect($authors ?? []);
-        $deptList = $authorCollection->pluck('department')->filter()->unique()->values();
-        $departments = ['Information Technology', 'Computer Science', 'Education', 'Engineering', 'Business Administration', 'Nursing', 'Criminology'];
+        $thesisCollection = $theses ?? collect();
+        $departments = $departments ?? collect();
+        $stats = $stats ?? ['total' => 0, 'departments' => 0, 'years' => 0, 'downloads' => 0];
     @endphp
 
     <!-- Navigation -->
@@ -120,19 +120,19 @@
         <div class="w-full max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#EB5E28] mb-1">{{ $authorCollection->count() }}</div>
+                    <div class="text-4xl md:text-5xl font-extrabold text-[#EB5E28] mb-1">{{ $stats['total'] }}</div>
                     <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Thesis Papers</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $authorCollection->pluck('department')->filter()->unique()->count() }}</div>
+                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['departments'] }}</div>
                     <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Departments</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#EB5E28] mb-1">{{ $authorCollection->pluck('year')->filter()->unique()->count() }}</div>
+                    <div class="text-4xl md:text-5xl font-extrabold text-[#EB5E28] mb-1">{{ $stats['years'] }}</div>
                     <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Research Years</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">1.2K+</div>
+                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['downloads'] }}+</div>
                     <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Downloads</div>
                 </div>
             </div>
@@ -209,20 +209,26 @@
                 <p class="text-lg text-[#CCC5B9]">Discover academic works organized by field of study and department.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($departments as $dept)
-                <a href="#research" class="group p-6 rounded-2xl bg-[#403D39]/50 border border-[#CCC5B9]/10 hover:border-[#EB5E28]/40 hover:bg-[#403D39]/70 transition-all duration-300">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-[#EB5E28]/20 flex items-center justify-center group-hover:bg-[#EB5E28] transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] group-hover:text-[#EB5E28] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-[#FFFCF2] mb-1">{{ $dept }}</h3>
-                    <p class="text-sm text-[#CCC5B9]">Browse thesis papers and research articles</p>
-                </a>
-                @endforeach
-            </div>
+            @if ($departments->isNotEmpty())
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach ($departments as $dept)
+                        <a href="#research" class="group p-6 rounded-2xl bg-[#403D39]/50 border border-[#CCC5B9]/10 hover:border-[#EB5E28]/40 hover:bg-[#403D39]/70 transition-all duration-300">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-10 h-10 rounded-xl bg-[#EB5E28]/20 flex items-center justify-center group-hover:bg-[#EB5E28] transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] group-hover:text-[#EB5E28] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-[#FFFCF2] mb-1">{{ $dept }}</h3>
+                            <p class="text-sm text-[#CCC5B9]">Browse thesis papers and research articles</p>
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-12">
+                    <p class="text-[#CCC5B9]">No departments found. Upload some thesis papers to get started.</p>
+                </div>
+            @endif
         </div>
     </section>
 
@@ -239,35 +245,34 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="authorGrid">
-                @foreach ($authorCollection->take(9) as $author)
-                    @php
-                        $tags = collect($author['tags'] ?? [])->filter()->values();
-                        $department = $author['department'] ?? 'General';
-                        $year = $author['year'] ?? '2024';
-                        $title = $author['thesis_title'] ?? 'Research Paper';
-                    @endphp
-                    <article class="group bg-white rounded-3xl p-7 border border-[#CCC5B9]/20 hover:border-[#EB5E28]/20 hover:shadow-2xl hover:shadow-[#EB5E28]/5 transition-all duration-300" data-author-card data-filter-text="{{ strtolower(collect([$author['name'] ?? '', $title, $department, implode(' ', $tags->all())])->filter()->implode(' ')) }}">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 rounded-full bg-[#EB5E28]/10 text-[#EB5E28] text-xs font-semibold">{{ $department }}</span>
-                            <span class="text-sm text-[#CCC5B9] font-medium">{{ $year }}</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-[#252422] mb-3 line-clamp-2 group-hover:text-[#EB5E28] transition-colors">{{ $title }}</h3>
-                        <p class="text-sm text-[#403D39] mb-4">By <span class="font-semibold">{{ $author['name'] }}</span></p>
-                        @if ($tags->isNotEmpty())
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                @foreach ($tags->take(3) as $tag)
-                                    <span class="px-3 py-1 rounded-full bg-[#FFFCF2] border border-[#CCC5B9]/20 text-xs font-medium text-[#403D39]">{{ $tag }}</span>
-                                @endforeach
+            @if ($thesisCollection->isNotEmpty())
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="authorGrid">
+                    @foreach ($thesisCollection->take(9) as $thesis)
+                        @php
+                            $author = $thesis->author ?? 'Unknown';
+                            $department = $thesis->department ?? 'General';
+                            $year = $thesis->thesis_date->format('Y');
+                            $title = $thesis->title;
+                        @endphp
+                        <article class="group bg-white rounded-3xl p-7 border border-[#CCC5B9]/20 hover:border-[#EB5E28]/20 hover:shadow-2xl hover:shadow-[#EB5E28]/5 transition-all duration-300" data-author-card data-filter-text="{{ strtolower(collect([$author, $title, $department])->filter()->implode(' ')) }}">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="px-3 py-1 rounded-full bg-[#EB5E28]/10 text-[#EB5E28] text-xs font-semibold">{{ $department }}</span>
+                                <span class="text-sm text-[#CCC5B9] font-medium">{{ $year }}</span>
                             </div>
-                        @endif
-                        <a href="mailto:{{ $author['email'] }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#EB5E28] hover:gap-3 transition-all">
-                            View Research
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                        </a>
-                    </article>
-                @endforeach
-            </div>
+                            <h3 class="text-lg font-bold text-[#252422] mb-3 line-clamp-2 group-hover:text-[#EB5E28] transition-colors">{{ $title }}</h3>
+                            <p class="text-sm text-[#403D39] mb-4">By <span class="font-semibold">{{ $author }}</span></p>
+                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#EB5E28] hover:gap-3 transition-all">
+                                View Research
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                            </a>
+                        </article>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-12">
+                    <p class="text-[#CCC5B9]">No thesis papers found. Upload some thesis papers to get started.</p>
+                </div>
+            @endif
 
             <div class="mt-12 bg-white rounded-3xl p-10 text-center text-[#403D39] border border-dashed border-[#CCC5B9]/30 hidden" id="emptyState">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-[#CCC5B9]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -301,66 +306,6 @@
                     <div class="w-16 h-16 rounded-2xl bg-[#EB5E28] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#EB5E28]/20">3</div>
                     <h3 class="text-xl font-bold text-[#252422] mb-3">Read & Learn</h3>
                     <p class="text-[#403D39] leading-relaxed">Access full papers, read abstracts, view metadata, and download documents for your academic needs.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-24">
-        <div class="w-full max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Testimonials</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">What Researchers Say</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-8 rounded-3xl bg-white border border-[#CCC5B9]/20">
-                    <div class="flex gap-1 mb-4">
-                        @for($i=0; $i<5; $i++)
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28]" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                        @endfor
-                    </div>
-                    <p class="text-[#403D39] leading-relaxed mb-6">"Thesis Atlas made it incredibly easy to find relevant research for my literature review. The search functionality is powerful and the interface is clean."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-[#EB5E28]/10 flex items-center justify-center text-[#EB5E28] font-bold text-sm">JD</div>
-                        <div>
-                            <div class="font-semibold text-[#252422]">John Doe</div>
-                            <div class="text-sm text-[#CCC5B9]">Computer Science Student</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-8 rounded-3xl bg-white border border-[#CCC5B9]/20">
-                    <div class="flex gap-1 mb-4">
-                        @for($i=0; $i<5; $i++)
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28]" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                        @endfor
-                    </div>
-                    <p class="text-[#403D39] leading-relaxed mb-6">"As a faculty member, I appreciate how organized the repository is. It's a valuable resource for both teaching and research purposes."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-[#252422] flex items-center justify-center text-white font-bold text-sm">MS</div>
-                        <div>
-                            <div class="font-semibold text-[#252422]">Maria Santos</div>
-                            <div class="text-sm text-[#CCC5B9]">Education Faculty</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-8 rounded-3xl bg-white border border-[#CCC5B9]/20">
-                    <div class="flex gap-1 mb-4">
-                        @for($i=0; $i<5; $i++)
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28]" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                        @endfor
-                    </div>
-                    <p class="text-[#403D39] leading-relaxed mb-6">"The filtering system is excellent. I can quickly find engineering thesis papers from specific years. A must-have tool for researchers."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-[#403D39] flex items-center justify-center text-white font-bold text-sm">RL</div>
-                        <div>
-                            <div class="font-semibold text-[#252422]">Robert Lim</div>
-                            <div class="text-sm text-[#CCC5B9]">Engineering Researcher</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

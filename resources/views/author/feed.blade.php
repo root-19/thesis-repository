@@ -49,6 +49,9 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-[#CCC5B9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
+                            <!-- Search Recommendations -->
+                            <div id="search-recommendations" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-[#CCC5B9]/20 hidden z-50 max-h-96 overflow-y-auto">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,7 +81,8 @@
                          data-title="{{ strtolower($thesis->title) }}"
                          data-author="{{ strtolower($thesis->author) }}"
                          data-uploader="{{ strtolower($thesis->user->name) }}"
-                         data-department="{{ strtolower($thesis->department) }}">
+                         data-department="{{ strtolower($thesis->department) }}"
+                         data-keywords="{{ strtolower($thesis->keywords ?? '') }}">
                         <!-- Header with uploader and author info -->
                         <div class="p-4 border-b border-[#CCC5B9]/20 flex items-center justify-between">
                             <div class="flex items-center gap-3">
@@ -121,23 +125,30 @@
                             <h3 class="text-lg font-semibold text-[#252422] mb-2">{{ $thesis->title }}</h3>
                             <p class="text-sm text-[#403D39] mb-3">{{ $thesis->description }}</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                @if ($thesis->coAuthors->count() > 0)
-                                    @php $firstAuthor = $thesis->coAuthors->first(); @endphp
-                                    <span class="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-[#FFFCF2] text-[#403D39]">
-                                        @if ($firstAuthor->profile_image_path)
-                                            <img src="{{ asset('storage/' . $firstAuthor->profile_image_path) }}" alt="{{ $firstAuthor->name }}" class="h-5 w-5 rounded-full object-cover">
+                                <div class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20">
+                                    <div class="h-5 w-5 rounded-full bg-[#EB5E28] flex items-center justify-center">
+                                        <span class="text-xs font-semibold text-white">{{ strtoupper(substr($thesis->author, 0, 1)) }}</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-[#252422]">{{ $thesis->author }}</p>
+                                        <p class="text-xs text-[#EB5E28]">Primary Author</p>
+                                    </div>
+                                </div>
+                                @foreach ($thesis->coAuthors as $coAuthor)
+                                    <div class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20">
+                                        @if ($coAuthor->profile_image_path)
+                                            <img src="{{ asset('storage/' . $coAuthor->profile_image_path) }}" alt="{{ $coAuthor->name }}" class="h-5 w-5 rounded-full object-cover">
                                         @else
                                             <div class="h-5 w-5 rounded-full bg-[#403D39] flex items-center justify-center">
-                                                <span class="text-xs font-semibold text-white">{{ strtoupper(substr($firstAuthor->name, 0, 1)) }}</span>
+                                                <span class="text-xs font-semibold text-white">{{ strtoupper(substr($coAuthor->name, 0, 1)) }}</span>
                                             </div>
                                         @endif
-                                        {{ $firstAuthor->name }}
-                                    </span>
-                                @else
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-[#FFFCF2] text-[#403D39]">
-                                        Author: {{ $thesis->author }}
-                                    </span>
-                                @endif
+                                        <div>
+                                            <p class="text-xs font-medium text-[#252422]">{{ $coAuthor->name }}</p>
+                                            <p class="text-xs text-[#CCC5B9]">Co-Author</p>
+                                        </div>
+                                    </div>
+                                @endforeach
                                 <span class="px-3 py-1 rounded-full text-xs font-medium bg-[#FFFCF2] text-[#403D39]">
                                     {{ $thesis->thesis_date->format('M d, Y') }}
                                 </span>
@@ -296,9 +307,95 @@
     </div>
 
     <script>
+        let searchTimeout;
+        let searchRecommendationsTimeout;
+
         document.getElementById('search-input').addEventListener('input', function(e) {
             filterTheses();
+            
+            // Show search recommendations
+            clearTimeout(searchRecommendationsTimeout);
+            const searchTerm = e.target.value.trim();
+            
+            if (searchTerm.length >= 2) {
+                searchRecommendationsTimeout = setTimeout(() => {
+                    fetchSearchRecommendations(searchTerm);
+                }, 300);
+            } else {
+                document.getElementById('search-recommendations').classList.add('hidden');
+            }
         });
+
+        // Hide recommendations when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#search-input') && !e.target.closest('#search-recommendations')) {
+                document.getElementById('search-recommendations').classList.add('hidden');
+            }
+        });
+
+        function fetchSearchRecommendations(searchTerm) {
+            const items = document.querySelectorAll('.thesis-feed-item');
+            const recommendations = [];
+            
+            items.forEach(item => {
+                const title = item.dataset.title;
+                const author = item.dataset.author;
+                const department = item.dataset.department;
+                const keywords = item.dataset.keywords;
+                
+                // Check if matches search term
+                if (title.includes(searchTerm) || author.includes(searchTerm) || department.includes(searchTerm) || keywords.includes(searchTerm)) {
+                    const thesisElement = item.closest('.thesis-feed-item');
+                    const titleElement = thesisElement.querySelector('h3');
+                    const titleText = titleElement ? titleElement.textContent : '';
+                    
+                    recommendations.push({
+                        title: titleText,
+                        author: author,
+                        department: department,
+                        keywords: keywords
+                    });
+                }
+            });
+
+            displayRecommendations(recommendations, searchTerm);
+        }
+
+        function displayRecommendations(recommendations, searchTerm) {
+            const container = document.getElementById('search-recommendations');
+            
+            if (recommendations.length === 0) {
+                container.innerHTML = '<div class="p-4 text-center text-[#CCC5B9]">No matching theses found</div>';
+                container.classList.remove('hidden');
+                return;
+            }
+
+            let html = '<div class="p-2">';
+            recommendations.slice(0, 5).forEach(rec => {
+                const highlightedTitle = highlightText(rec.title, searchTerm);
+                html += `
+                    <div class="p-3 hover:bg-[#FFFCF2] rounded-lg cursor-pointer transition-colors" onclick="selectRecommendation('${rec.title.replace(/'/g, "\\'")}')">
+                        <p class="text-sm font-medium text-[#252422]">${highlightedTitle}</p>
+                        <p class="text-xs text-[#CCC5B9]">${rec.author} · ${rec.department}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+            container.classList.remove('hidden');
+        }
+
+        function highlightText(text, searchTerm) {
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="bg-[#EB5E28]/20 text-[#EB5E28] font-semibold">$1</span>');
+        }
+
+        function selectRecommendation(title) {
+            document.getElementById('search-input').value = title;
+            document.getElementById('search-recommendations').classList.add('hidden');
+            filterTheses();
+        }
 
         document.getElementById('department-filter').addEventListener('change', function(e) {
             filterTheses();
@@ -314,8 +411,9 @@
                 const author = item.dataset.author;
                 const uploader = item.dataset.uploader;
                 const department = item.dataset.department;
+                const keywords = item.dataset.keywords;
 
-                const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || uploader.includes(searchTerm);
+                const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || uploader.includes(searchTerm) || keywords.includes(searchTerm);
                 const matchesDepartment = departmentFilter === '' || department === departmentFilter;
 
                 if (matchesSearch && matchesDepartment) {

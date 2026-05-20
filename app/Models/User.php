@@ -62,4 +62,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->unreadNotifications()->count();
     }
+
+    public function savedTheses()
+    {
+        return $this->belongsToMany(Thesis::class, 'saved_theses', 'user_id', 'thesis_id')->withTimestamps();
+    }
 }

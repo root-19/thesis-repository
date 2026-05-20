@@ -4,24 +4,31 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h3 class="text-lg font-semibold text-[#252422]">Upload Thesis</h3>
-                    <p class="text-sm text-[#CCC5B9] mt-1">Fill in the thesis details and upload the PDF file</p>
+                    <h3 class="text-lg font-semibold text-[#252422]">Edit Thesis</h3>
+                    <p class="text-sm text-[#CCC5B9] mt-1">Update thesis details and PDF file</p>
                 </div>
                 <div class="p-6">
-                    <form method="POST" action="{{ route('admin.theses.store') }}" enctype="multipart/form-data">
+                    @if (session('status'))
+                        <div class="mb-4 p-4 bg-[#FFFCF2] rounded-xl border border-[#EB5E28]/20">
+                            <p class="text-sm text-[#EB5E28]">{{ session('status') }}</p>
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('admin.theses.update', $thesis) }}" enctype="multipart/form-data">
                         @csrf
+                        @method('PUT')
 
                         <div class="space-y-6">
                             <div>
                                 <x-input-label for="title" :value="__('Title')" />
-                                <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
+                                <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title', $thesis->title)" required autofocus />
                                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
                             </div>
 
                             <div>
                                 <x-input-label for="description" :value="__('Description')" />
                                 <textarea id="description" name="description" rows="4" required
-                                    class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]">{{ old('description') }}</textarea>
+                                    class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]">{{ old('description', $thesis->description) }}</textarea>
                                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
                             </div>
 
@@ -29,7 +36,7 @@
                                 <x-input-label for="keywords" :value="__('Keywords')" />
                                 <textarea id="keywords" name="keywords" rows="2"
                                     class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
-                                    placeholder="Enter keywords separated by commas (e.g., machine learning, artificial intelligence, data science)">{{ old('keywords') }}</textarea>
+                                    placeholder="Enter keywords separated by commas (e.g., machine learning, artificial intelligence, data science)">{{ old('keywords', $thesis->keywords ?? '') }}</textarea>
                                 <p class="mt-1 text-xs text-[#CCC5B9]">Keywords will help users find this thesis more easily</p>
                                 <x-input-error :messages="$errors->get('keywords')" class="mt-2" />
                             </div>
@@ -39,32 +46,63 @@
                                     <x-input-label for="thesis_date" :value="__('Thesis Date')" />
                                     <input id="thesis_date" name="thesis_date" type="date" required
                                         class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
-                                        value="{{ old('thesis_date') }}" />
+                                        value="{{ old('thesis_date', $thesis->thesis_date->format('Y-m-d')) }}" />
                                     <x-input-error :messages="$errors->get('thesis_date')" class="mt-2" />
                                 </div>
 
                                 <div>
                                     <x-input-label for="department" :value="__('Department')" />
-                                    <x-text-input id="department" class="block mt-1 w-full" type="text" name="department" :value="old('department')" required />
+                                    <x-text-input id="department" class="block mt-1 w-full" type="text" name="department" :value="old('department', $thesis->department)" required />
                                     <x-input-error :messages="$errors->get('department')" class="mt-2" />
                                 </div>
                             </div>
 
                             <div>
-                                <x-input-label for="co_authors_search" :value="__('Add Authors (will be displayed in thesis)')" />
+                                <x-input-label for="author" :value="__('Primary Author')" />
+                                <x-text-input id="author" class="block mt-1 w-full" type="text" name="author" :value="old('author', $thesis->author)" required />
+                                <x-input-error :messages="$errors->get('author')" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="co_authors_search" :value="__('Add Co-Authors (will be displayed in thesis)')" />
                                 <input type="text" id="co_authors_search" name="co_authors_search"
                                     class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
                                     placeholder="Search authors to add..."
                                     onkeyup="searchCoAuthors(this.value)">
                                 <div id="co_authors_search_results" class="mt-2 space-y-2"></div>
-                                <div id="selected_co_authors" class="mt-4 space-y-2"></div>
+                                <div id="selected_co_authors" class="mt-4 space-y-2">
+                                    @foreach ($thesis->coAuthors as $coAuthor)
+                                        <div id="selected-co-author-{{ $coAuthor->id }}" class="flex items-center justify-between bg-white rounded-xl p-3 border border-[#CCC5B9]/20">
+                                            <div class="flex items-center gap-3">
+                                                @if ($coAuthor->profile_image_path)
+                                                    <img src="/storage/{{ $coAuthor->profile_image_path }}" alt="{{ $coAuthor->name }}" class="h-8 w-8 rounded-full object-cover">
+                                                @else
+                                                    <div class="h-8 w-8 rounded-full bg-[#FFFCF2] flex items-center justify-center border border-[#CCC5B9]/20">
+                                                        <span class="text-xs font-semibold text-[#403D39]">{{ strtoupper(substr($coAuthor->name, 0, 1)) }}</span>
+                                                    </div>
+                                                @endif
+                                                <div>
+                                                    <p class="text-sm font-medium text-[#252422]">{{ $coAuthor->name }}</p>
+                                                    <p class="text-xs text-[#CCC5B9]">Will be displayed as co-author</p>
+                                                </div>
+                                            </div>
+                                            <button type="button" onclick="removeCoAuthor({{ $coAuthor->id }})" class="px-3 py-1 bg-[#CCC5B9] text-white rounded-lg text-xs font-medium hover:bg-[#b5b4b0] transition-colors">
+                                                Remove
+                                            </button>
+                                            <input type="hidden" name="co_authors[]" value="{{ $coAuthor->id }}">
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
 
                             <div>
                                 <x-input-label for="pdf_file" :value="__('PDF File')" />
-                                <input id="pdf_file" name="pdf_file" type="file" accept=".pdf" required
+                                <input id="pdf_file" name="pdf_file" type="file" accept=".pdf"
                                     class="block mt-1 w-full text-sm text-[#403D39] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#FFFCF2] file:text-[#252422] hover:file:bg-[#CCC5B9]/30" />
-                                <p class="mt-1 text-xs text-[#CCC5B9]">Maximum file size: 10MB</p>
+                                <p class="mt-1 text-xs text-[#CCC5B9]">Leave blank to keep current file. Maximum file size: 10MB</p>
+                                @if ($thesis->pdf_file_path)
+                                    <p class="mt-2 text-sm text-[#403D39]">Current file: <a href="{{ asset('storage/' . $thesis->pdf_file_path) }}" target="_blank" class="text-[#2b8c62] hover:text-[#EB5E28] transition-colors font-medium">View PDF</a></p>
+                                @endif
                                 <x-input-error :messages="$errors->get('pdf_file')" class="mt-2" />
                             </div>
 
@@ -73,7 +111,7 @@
                                     Cancel
                                 </a>
                                 <x-primary-button>
-                                    {{ __('Upload Thesis') }}
+                                    {{ __('Update Thesis') }}
                                 </x-primary-button>
                             </div>
                         </div>
@@ -86,6 +124,11 @@
     <script>
         let selectedCoAuthors = [];
         let searchTimeout;
+
+        // Initialize with existing co-authors
+        @foreach ($thesis->coAuthors as $coAuthor)
+            selectedCoAuthors.push({{ $coAuthor->id }});
+        @endforeach
 
         function searchCoAuthors(query) {
             clearTimeout(searchTimeout);
@@ -153,7 +196,7 @@
                     }
                     <div>
                         <p class="text-sm font-medium text-[#252422]">${userName}</p>
-                        <p class="text-xs text-[#CCC5B9]">Will be displayed as author</p>
+                        <p class="text-xs text-[#CCC5B9]">Will be displayed as co-author</p>
                     </div>
                 </div>
                 <button type="button" onclick="removeCoAuthor(${userId})" class="px-3 py-1 bg-[#CCC5B9] text-white rounded-lg text-xs font-medium hover:bg-[#b5b4b0] transition-colors">
@@ -169,7 +212,10 @@
 
         function removeCoAuthor(userId) {
             selectedCoAuthors = selectedCoAuthors.filter(id => id !== userId);
-            document.getElementById(`selected-co-author-${userId}`).remove();
+            const element = document.getElementById(`selected-co-author-${userId}`);
+            if (element) {
+                element.remove();
+            }
         }
     </script>
 </x-app-layout>
