@@ -89,7 +89,7 @@
                             @empty
                                 <tr>
                                     <td colspan="6" class="px-6 py-12 text-center">
-                                        <div class="text-[#CCC5B9]">No theses uploaded yet</div>
+                                        <div class="text-[#CCC5B9]">No Thesis uploaded yet</div>
                                     </td>
                                 </tr>
                             @endforelse

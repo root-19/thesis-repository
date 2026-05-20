@@ -3,7 +3,7 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h2 class="text-2xl font-bold text-[#252422]">Apply as Co-Author</h2>
+                    <h2 class="text-2xl font-bold text-[#252422]">Apply as Author</h2>
                     <p class="text-[#CCC5B9] mt-1">Submit your thesis to become a co-author</p>
                 </div>
 

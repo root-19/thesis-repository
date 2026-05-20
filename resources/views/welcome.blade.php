@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Thesis Atlas - Discover, search, and explore academic research papers, thesis documents, and scholarly articles from students and researchers.">
-    <title>Thesis Atlas - Academic Research Repository</title>
+    <meta name="description" content="Arcoe - Discover, search, and explore academic research papers, thesis documents, and scholarly articles from students and researchers.">
+    <title>Arcoe - Academic Research Repository</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -58,10 +58,8 @@
     <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-[#403D39]/10">
         <div class="w-full max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 font-bold text-xl text-[#252422]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-[#EB5E28]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                </svg>
-                Thesis<span class="text-[#EB5E28]">Atlas</span>
+                <img src="/logo.png" alt="Arcoe" class="h-10 w-10">
+                <span>Arcoe</span>
             </a>
             <div class="flex items-center gap-6">
                 <a href="#features" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Features</a>
@@ -131,7 +129,7 @@
     <section id="features" class="py-24">
         <div class="w-full max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Why Thesis Atlas</span>
+                <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Why Arcoe</span>
                 <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">Powerful Tools for Research Discovery</h2>
                 <p class="text-lg text-[#403D39]">Everything you need to find, read, and learn from academic research papers.</p>
             </div>
@@ -243,7 +241,7 @@
         <div class="w-full max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Simple Process</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">How Thesis Atlas Works</h2>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">How Arcoe Works</h2>
                 <p class="text-lg text-[#403D39]">Find the research you need in three simple steps.</p>
             </div>
 
@@ -284,11 +282,9 @@
         <div class="w-full max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div>
-                    <a href="/" class="flex items-center gap-2 font-bold text-xl text-[#252422] mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                        </svg>
-                        Thesis<span class="text-[#EB5E28]">Atlas</span>
+                    <a href="/" class="flex items-center gap-2 font-bold text-xl text-[#252422]">
+                        <img src="/logo.png" alt="Arcoe" class="h-10 w-10">
+                        <span>Arcoe</span>
                     </a>
                     <p class="text-sm text-[#403D39] leading-relaxed">A modern academic research repository for discovering thesis papers, capstone projects, and scholarly articles.</p>
                 </div>
@@ -324,7 +320,7 @@
                 </div>
             </div>
             <div class="pt-8 border-t border-[#CCC5B9]/20 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-[#CCC5B9]">&copy; {{ date('Y') }} Thesis Atlas. All rights reserved.</p>
+                <p class="text-sm text-[#CCC5B9]">&copy; {{ date('Y') }} Arcoe. All rights reserved.</p>
                 <p class="text-sm text-[#CCC5B9]">Built for academic excellence and research discovery.</p>
             </div>
         </div>

@@ -7,7 +7,7 @@
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#CCC5B9]/20">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-[#CCC5B9] uppercase tracking-wider">Total Theses</p>
+                            <p class="text-sm font-medium text-[#CCC5B9] uppercase tracking-wider">Total Thesis</p>
                             <p class="text-3xl font-bold text-[#252422] mt-1">{{ App\Models\Thesis::count() }}</p>
                         </div>
                         <div class="w-12 h-12 bg-[#FFFCF2] rounded-xl flex items-center justify-center">
@@ -21,8 +21,8 @@
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#CCC5B9]/20">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-[#CCC5B9] uppercase tracking-wider">My Theses</p>
-                            <p class="text-3xl font-bold text-[#252422] mt-1">{{ App\Models\Thesis::where('user_id', auth()->id())->count() }}</p>
+                            <p class="text-sm font-medium text-[#CCC5B9] uppercase tracking-wider">My Thesis</p>
+                            <p class="text-3xl font-bold text-[#252422] mt-1">{{ \App\Models\Thesis::where('user_id', auth()->id())->orWhereHas('coAuthors', function($query) { $query->where('users.id', auth()->id()); })->count() }}</p>
                         </div>
                         <div class="w-12 h-12 bg-[#FFFCF2] rounded-xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#2b8c62]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -65,7 +65,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
                     <h3 class="text-lg font-semibold text-[#252422]">Author Dashboard</h3>
-                    <p class="text-sm text-[#CCC5B9] mt-1">Manage your theses and co-author applications</p>
+                    <p class="text-sm text-[#CCC5B9] mt-1">Manage your thesis and co-author applications</p>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -77,7 +77,7 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">View Feed</p>
-                                <p class="text-xs text-[#CCC5B9]">Browse all theses</p>
+                                <p class="text-xs text-[#CCC5B9]">Browse all thesis</p>
                             </div>
                         </a>
 
@@ -88,7 +88,7 @@
                                 </svg>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">Apply as Co-Author</p>
+                                <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">Apply as Author</p>
                                 <p class="text-xs text-[#CCC5B9]">Submit your thesis</p>
                             </div>
                         </a>
@@ -100,7 +100,7 @@
                                 </svg>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">Recommend Author</p>
+                                <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">Recommend Co-Authors</p>
                                 <p class="text-xs text-[#CCC5B9]">Add members to author team</p>
                             </div>
                         </a>

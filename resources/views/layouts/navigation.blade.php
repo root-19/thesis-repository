@@ -41,10 +41,10 @@
                             {{ __('Author Team') }}
                         </x-nav-link>
                         <x-nav-link :href="route('co-author-application.create')" :active="request()->routeIs('co-author-application.create')">
-                            {{ __('Apply as Co-Author') }}
+                            {{ __('Apply as Author') }}
                         </x-nav-link>
                         <x-nav-link :href="route('author.recommendation.create')" :active="request()->routeIs('author.recommendation.create')">
-                            {{ __('Recommend Author') }}
+                            {{ __('Recommend Co-Authors') }}
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -54,7 +54,7 @@
                             {{ __('Message') }}
                         </x-nav-link>
                         <x-nav-link :href="route('co-author-application.create')" :active="request()->routeIs('co-author-application.create')">
-                            {{ __('Apply as Co-Author') }}
+                            {{ __('Apply as Author') }}
                         </x-nav-link>
                     @endif
                 </div>
