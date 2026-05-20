@@ -28,12 +28,6 @@
                             <span class="font-semibold">{{ $stats['total'] }} Thesis Documents</span>
                         </div>
                         <div class="flex items-center gap-2 text-[#403D39]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#2b8c62]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                            <span class="font-semibold">{{ $stats['departments'] }} Departments</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-[#403D39]">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#403D39]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
@@ -62,16 +56,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
                 <h2 class="text-2xl font-bold text-[#252422]">Thesis Feed</h2>
-                <div class="flex items-center gap-4">
-                    <select id="department-filter" class="px-4 py-2 rounded-xl border border-[#CCC5B9]/40 bg-white text-[#252422] text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28]/10">
-                        <option value="">All Departments</option>
-                        @foreach($departments as $department)
-                            <option value="{{ strtolower($department) }}">{{ $department }}</option>
-                        @endforeach
-                    </select>
-                    <div class="text-[#CCC5B9] text-sm">
-                        {{ $theses->count() }} thesis documents
-                    </div>
+                <div class="text-[#CCC5B9] text-sm">
+                    {{ $theses->count() }} thesis documents
                 </div>
             </div>
 
@@ -81,7 +67,6 @@
                          data-title="{{ strtolower($thesis->title) }}"
                          data-author="{{ strtolower($thesis->author) }}"
                          data-uploader="{{ strtolower($thesis->user->name) }}"
-                         data-department="{{ strtolower($thesis->department) }}"
                          data-keywords="{{ strtolower($thesis->keywords ?? '') }}">
                         <!-- Header with uploader info -->
                         <div class="p-4 border-b border-[#CCC5B9]/20 flex items-center gap-3">
@@ -94,7 +79,7 @@
                             @endif
                             <div>
                                 <p class="font-semibold text-[#252422]">{{ $thesis->user->name }}</p>
-                                <p class="text-xs text-[#CCC5B9]">{{ $thesis->created_at->diffForHumans() }} · {{ $thesis->department }}</p>
+                                <p class="text-xs text-[#CCC5B9]">{{ $thesis->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
 
@@ -383,26 +368,20 @@
             filterTheses();
         }
 
-        document.getElementById('department-filter').addEventListener('change', function(e) {
-            filterTheses();
-        });
 
         function filterTheses() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const departmentFilter = document.getElementById('department-filter').value.toLowerCase();
             const items = document.querySelectorAll('.thesis-feed-item');
 
             items.forEach(item => {
                 const title = item.dataset.title;
                 const author = item.dataset.author;
                 const uploader = item.dataset.uploader;
-                const department = item.dataset.department;
                 const keywords = item.dataset.keywords;
 
                 const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || uploader.includes(searchTerm) || keywords.includes(searchTerm);
-                const matchesDepartment = departmentFilter === '' || department === departmentFilter;
 
-                if (matchesSearch && matchesDepartment) {
+                if (matchesSearch) {
                     item.style.display = 'block';
                 } else {
                     item.style.display = 'none';

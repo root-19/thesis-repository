@@ -25,7 +25,7 @@
                             {{ __('Author Recommendations') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.author.team')" :active="request()->routeIs('admin.author.team')">
-                            {{ __('Author Team') }}
+                            {{ __('Authors') }}
                         </x-nav-link>
                     @elseif (auth()->user()?->isAuthor())
                         <x-nav-link :href="route('author.dashboard')" :active="request()->routeIs('author.dashboard')">

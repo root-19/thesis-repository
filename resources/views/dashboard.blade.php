@@ -64,16 +64,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
                 <h2 class="text-2xl font-bold text-[#252422]">Available Thesis</h2>
-                <div class="flex items-center gap-4">
-                    <select id="department-filter" class="px-4 py-2 rounded-xl border border-[#CCC5B9]/40 bg-white text-[#252422] text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28]/10">
-                        <option value="">All Departments</option>
-                        @foreach($departments as $department)
-                            <option value="{{ strtolower($department) }}">{{ $department }}</option>
-                        @endforeach
-                    </select>
-                    <div class="text-[#CCC5B9] text-sm">
-                        {{ $theses->count() }} thesis documents
-                    </div>
+                <div class="text-[#CCC5B9] text-sm">
+                    {{ $theses->count() }} thesis documents
                 </div>
             </div>
 
@@ -83,7 +75,6 @@
                          data-title="{{ strtolower($thesis->title) }}"
                          data-author="{{ strtolower($thesis->author) }}"
                          data-uploader="{{ strtolower($thesis->user->name) }}"
-                         data-department="{{ strtolower($thesis->department) }}"
                          data-keywords="{{ strtolower($thesis->keywords ?? '') }}">
                         <!-- Header with uploader and author info -->
                         <div class="p-4 border-b border-[#CCC5B9]/20 flex items-center justify-between">
@@ -117,7 +108,6 @@
                                 @endif
                                 <div>
                                     <p class="font-semibold text-[#252422]">{{ $thesis->author }}</p>
-                                    <p class="text-xs text-[#CCC5B9]">{{ $thesis->department }}</p>
                                 </div>
                             </div>
                         </div>
@@ -451,26 +441,20 @@
             filterTheses();
         }
 
-        document.getElementById('department-filter').addEventListener('change', function(e) {
-            filterTheses();
-        });
 
         function filterTheses() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const departmentFilter = document.getElementById('department-filter').value.toLowerCase();
             const items = document.querySelectorAll('.thesis-feed-item');
 
             items.forEach(item => {
                 const title = item.dataset.title;
                 const author = item.dataset.author;
                 const uploader = item.dataset.uploader;
-                const department = item.dataset.department;
                 const keywords = item.dataset.keywords;
 
                 const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || uploader.includes(searchTerm) || keywords.includes(searchTerm);
-                const matchesDepartment = departmentFilter === '' || department === departmentFilter;
 
-                if (matchesSearch && matchesDepartment) {
+                if (matchesSearch) {
                     item.style.display = 'block';
                 } else {
                     item.style.display = 'none';

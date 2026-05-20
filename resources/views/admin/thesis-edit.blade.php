@@ -41,20 +41,12 @@
                                 <x-input-error :messages="$errors->get('keywords')" class="mt-2" />
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <x-input-label for="thesis_date" :value="__('Thesis Date')" />
-                                    <input id="thesis_date" name="thesis_date" type="date" required
-                                        class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
-                                        value="{{ old('thesis_date', $thesis->thesis_date->format('Y-m-d')) }}" />
-                                    <x-input-error :messages="$errors->get('thesis_date')" class="mt-2" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="department" :value="__('Department')" />
-                                    <x-text-input id="department" class="block mt-1 w-full" type="text" name="department" :value="old('department', $thesis->department)" required />
-                                    <x-input-error :messages="$errors->get('department')" class="mt-2" />
-                                </div>
+                            <div>
+                                <x-input-label for="thesis_date" :value="__('Thesis Date')" />
+                                <input id="thesis_date" name="thesis_date" type="date" required
+                                    class="block mt-1 w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
+                                    value="{{ old('thesis_date', $thesis->thesis_date->format('Y-m-d')) }}" />
+                                <x-input-error :messages="$errors->get('thesis_date')" class="mt-2" />
                             </div>
 
                             <div>

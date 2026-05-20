@@ -51,8 +51,7 @@
 <body class="antialiased">
     @php
         $thesisCollection = $theses ?? collect();
-        $departments = $departments ?? collect();
-        $stats = $stats ?? ['total' => 0, 'departments' => 0, 'years' => 0, 'downloads' => 0];
+        $stats = $stats ?? ['total' => 0, 'years' => 0, 'downloads' => 0];
     @endphp
 
     <!-- Navigation -->
@@ -66,7 +65,6 @@
             </a>
             <div class="flex items-center gap-6">
                 <a href="#features" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Features</a>
-                <a href="#departments" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Departments</a>
                 <a href="#research" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Research</a>
                 @if (Route::has('login'))
                     @auth
@@ -95,22 +93,16 @@
                     <span class="text-[#EB5E28]">Explore Research.</span>
                 </h1>
                 <p class="text-lg md:text-xl text-[#403D39] leading-relaxed max-w-2xl mb-10 animate-fade-up animate-fade-up-delay-2">
-                    Access thousands of thesis papers, capstone projects, and scholarly articles. Search by title, author, department, or keyword to find the research you need.
+                    Access thousands of thesis papers, capstone projects, and scholarly articles. Search by title, author, or keyword to find the research you need.
                 </p>
 
                 <form class="flex items-center gap-3 bg-white rounded-2xl p-2 shadow-xl shadow-[#252422]/10 border border-[#CCC5B9]/30 max-w-2xl animate-fade-up animate-fade-up-delay-3" id="authorSearchForm" autocomplete="off">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                    <input id="authorSearchInput" type="search" placeholder="Search thesis titles, authors, departments, or keywords..." aria-label="Search research papers" class="flex-1 border-none bg-transparent px-2 py-3 text-base text-[#252422] focus:outline-none placeholder:text-[#CCC5B9]">
+                    <input id="authorSearchInput" type="search" placeholder="Search thesis titles, authors, or keywords..." aria-label="Search research papers" class="flex-1 border-none bg-transparent px-2 py-3 text-base text-[#252422] focus:outline-none placeholder:text-[#CCC5B9]">
                     <button type="submit" class="px-7 py-3.5 rounded-xl bg-[#252422] text-white font-semibold hover:bg-[#403D39] transition-all duration-300 shadow-lg">Search</button>
                 </form>
 
-                <div class="flex flex-wrap items-center gap-4 mt-8 animate-fade-up animate-fade-up-delay-4">
-                    <span class="text-sm text-[#CCC5B9] font-medium">Popular:</span>
-                    <a href="#research" class="px-4 py-2 rounded-full bg-white/80 border border-[#CCC5B9]/30 text-sm text-[#403D39] hover:border-[#EB5E28]/40 hover:text-[#EB5E28] transition-all">Machine Learning</a>
-                    <a href="#research" class="px-4 py-2 rounded-full bg-white/80 border border-[#CCC5B9]/30 text-sm text-[#403D39] hover:border-[#EB5E28]/40 hover:text-[#EB5E28] transition-all">Education</a>
-                    <a href="#research" class="px-4 py-2 rounded-full bg-white/80 border border-[#CCC5B9]/30 text-sm text-[#403D39] hover:border-[#EB5E28]/40 hover:text-[#EB5E28] transition-all">Engineering</a>
-                    <a href="#research" class="px-4 py-2 rounded-full bg-white/80 border border-[#CCC5B9]/30 text-sm text-[#403D39] hover:border-[#EB5E28]/40 hover:text-[#EB5E28] transition-all">Business</a>
-                </div>
+             
             </div>
         </div>
     </section>
@@ -118,22 +110,18 @@
     <!-- Statistics Section -->
     <section class="py-16 border-y border-[#CCC5B9]/20">
         <div class="w-full max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-extrabold text-[#EB5E28] mb-1">{{ $stats['total'] }}</div>
                     <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Thesis Papers</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['departments'] }}</div>
-                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Departments</div>
+                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['total'] }}</div>
+                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Thesis Documents</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#EB5E28] mb-1">{{ $stats['years'] }}</div>
-                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Research Years</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['downloads'] }}+</div>
-                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Downloads</div>
+                <div class="glass-card rounded-2xl p-6 text-center animate-fade-up animate-fade-up-delay-3">
+                    <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['years'] }}</div>
+                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Years of Research</div>
                 </div>
             </div>
         </div>
@@ -154,7 +142,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
                     <h3 class="text-xl font-bold text-[#252422] mb-2">Advanced Search</h3>
-                    <p class="text-[#403D39] leading-relaxed">Find research papers instantly with intelligent search across titles, authors, departments, and keywords.</p>
+                    <p class="text-[#403D39] leading-relaxed">Find research papers instantly with intelligent search across titles, authors, and keywords.</p>
                 </div>
 
                 <div class="group p-8 rounded-3xl bg-white border border-[#CCC5B9]/20 hover:border-[#EB5E28]/30 hover:shadow-xl hover:shadow-[#EB5E28]/5 transition-all duration-300">
@@ -162,7 +150,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
                     </div>
                     <h3 class="text-xl font-bold text-[#252422] mb-2">Smart Filtering</h3>
-                    <p class="text-[#403D39] leading-relaxed">Narrow results by department, publication year, research topic, or adviser to find exactly what you need.</p>
+                    <p class="text-[#403D39] leading-relaxed">Narrow results by publication year, research topic, or adviser to find exactly what you need.</p>
                 </div>
 
                 <div class="group p-8 rounded-3xl bg-white border border-[#CCC5B9]/20 hover:border-[#EB5E28]/30 hover:shadow-xl hover:shadow-[#EB5E28]/5 transition-all duration-300">
@@ -197,38 +185,6 @@
                     <p class="text-[#403D39] leading-relaxed">Enjoy an optimized reading experience on any device — desktop, tablet, or mobile phone.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Departments Section -->
-    <section id="departments" class="py-24 bg-[#252422]">
-        <div class="w-full max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Browse by Field</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-[#FFFCF2] mt-3 mb-4">Explore Research Departments</h2>
-                <p class="text-lg text-[#CCC5B9]">Discover academic works organized by field of study and department.</p>
-            </div>
-
-            @if ($departments->isNotEmpty())
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ($departments as $dept)
-                        <a href="#research" class="group p-6 rounded-2xl bg-[#403D39]/50 border border-[#CCC5B9]/10 hover:border-[#EB5E28]/40 hover:bg-[#403D39]/70 transition-all duration-300">
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="w-10 h-10 rounded-xl bg-[#EB5E28]/20 flex items-center justify-center group-hover:bg-[#EB5E28] transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] group-hover:text-[#EB5E28] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            </div>
-                            <h3 class="text-lg font-bold text-[#FFFCF2] mb-1">{{ $dept }}</h3>
-                            <p class="text-sm text-[#CCC5B9]">Browse thesis papers and research articles</p>
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <div class="text-center py-12">
-                    <p class="text-[#CCC5B9]">No departments found. Upload some thesis papers to get started.</p>
-                </div>
-            @endif
         </div>
     </section>
 
@@ -295,12 +251,12 @@
                 <div class="text-center p-8">
                     <div class="w-16 h-16 rounded-2xl bg-[#EB5E28] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#EB5E28]/20">1</div>
                     <h3 class="text-xl font-bold text-[#252422] mb-3">Search Research</h3>
-                    <p class="text-[#403D39] leading-relaxed">Enter keywords, titles, authors, or departments in our powerful search bar to find relevant academic papers.</p>
+                    <p class="text-[#403D39] leading-relaxed">Enter keywords, titles, or authors in our powerful search bar to find relevant academic papers.</p>
                 </div>
                 <div class="text-center p-8">
                     <div class="w-16 h-16 rounded-2xl bg-[#252422] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg">2</div>
                     <h3 class="text-xl font-bold text-[#252422] mb-3">Explore Topics</h3>
-                    <p class="text-[#403D39] leading-relaxed">Browse through departments, filter by year, and discover trending research topics in your field of interest.</p>
+                    <p class="text-[#403D39] leading-relaxed">Browse by year and discover trending research topics in your field of interest.</p>
                 </div>
                 <div class="text-center p-8">
                     <div class="w-16 h-16 rounded-2xl bg-[#EB5E28] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#EB5E28]/20">3</div>
@@ -315,7 +271,7 @@
     <section class="py-24 bg-[#252422]">
         <div class="w-full max-w-4xl mx-auto px-6 text-center">
             <h2 class="text-3xl md:text-5xl font-extrabold text-[#FFFCF2] mb-6">Ready to Explore Academic Research?</h2>
-            <p class="text-lg text-[#CCC5B9] mb-10 max-w-2xl mx-auto">Start discovering thesis papers, capstone projects, and scholarly articles from students and researchers across departments.</p>
+            <p class="text-lg text-[#CCC5B9] mb-10 max-w-2xl mx-auto">Start discovering thesis papers, capstone projects, and scholarly articles from students and researchers.</p>
             <div class="flex flex-wrap justify-center gap-4">
                 <a href="#research" class="px-8 py-4 rounded-full bg-[#EB5E28] text-white font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">Browse Research Papers</a>
                 <a href="#features" class="px-8 py-4 rounded-full bg-transparent border border-[#CCC5B9]/30 text-[#FFFCF2] font-semibold hover:bg-[#FFFCF2]/10 transition-colors">Learn More</a>
@@ -340,7 +296,7 @@
                     <h4 class="font-semibold text-[#252422] mb-4">Quick Links</h4>
                     <ul class="space-y-3">
                         <li><a href="#features" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Features</a></li>
-                        <li><a href="#departments" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Departments</a></li>
+                        <li><a href="#research" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Research</a></li>
                         <li><a href="#research" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Research Papers</a></li>
                     </ul>
                 </div>

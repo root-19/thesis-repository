@@ -23,14 +23,11 @@ Route::get('/', function () {
 
     $stats = [
         'total' => $theses->count(),
-        'departments' => $theses->pluck('department')->filter()->unique()->count(),
         'years' => $theses->pluck('thesis_date')->map(fn($date) => $date->format('Y'))->filter()->unique()->count(),
         'downloads' => $theses->count() * 15, // Estimate based on thesis count
     ];
 
-    $departments = $theses->pluck('department')->filter()->unique()->sort()->values();
-
-    return view('welcome', compact('theses', 'stats', 'departments'));
+    return view('welcome', compact('theses', 'stats'));
 });
 
 Route::get('/author/dashboard', function () {
@@ -45,13 +42,10 @@ Route::get('/author/feed', function () {
 
     $stats = [
         'total' => $theses->count(),
-        'departments' => $theses->pluck('department')->unique()->count(),
         'years' => $theses->pluck('thesis_date')->map(fn($date) => $date->format('Y'))->unique()->count(),
     ];
 
-    $departments = $theses->pluck('department')->unique()->values();
-
-    return view('author.feed', compact('theses', 'stats', 'departments'));
+    return view('author.feed', compact('theses', 'stats'));
 })->middleware(['auth'])
     ->name('author.feed');
 
@@ -105,13 +99,10 @@ Route::get('/user/dashboard', function () {
 
     $stats = [
         'total' => $theses->count(),
-        'departments' => $theses->pluck('department')->unique()->count(),
         'years' => $theses->pluck('thesis_date')->map(fn($date) => $date->format('Y'))->unique()->count(),
     ];
 
-    $departments = $theses->pluck('department')->unique()->values();
-
-    return view('dashboard', compact('theses', 'stats', 'departments'));
+    return view('dashboard', compact('theses', 'stats'));
 })->middleware(['auth'])->name('user.dashboard');
 
 Route::post('/thesis/{thesis}/save', [\App\Http\Controllers\DashboardController::class, 'saveThesis'])
@@ -169,13 +160,10 @@ Route::get('/admin/feed', function () {
 
     $stats = [
         'total' => $theses->count(),
-        'departments' => $theses->pluck('department')->unique()->count(),
         'years' => $theses->pluck('thesis_date')->map(fn($date) => $date->format('Y'))->unique()->count(),
     ];
 
-    $departments = $theses->pluck('department')->unique()->values();
-
-    return view('admin.feed', compact('theses', 'stats', 'departments'));
+    return view('admin.feed', compact('theses', 'stats'));
 })->middleware(['auth'])
     ->name('admin.feed');
 
