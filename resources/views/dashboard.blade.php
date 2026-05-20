@@ -88,21 +88,29 @@
                             <div class="flex items-center gap-3">
                                 @if ($thesis->coAuthors->count() > 0)
                                     @php $firstAuthor = $thesis->coAuthors->first(); @endphp
-                                    @if ($firstAuthor->profile_image_path)
-                                        <img src="{{ asset('storage/' . $firstAuthor->profile_image_path) }}" alt="{{ $firstAuthor->name }}" class="h-10 w-10 rounded-full object-cover">
-                                    @else
-                                        <div class="h-10 w-10 rounded-full bg-[#FFFCF2] flex items-center justify-center">
-                                            <span class="text-sm font-semibold text-[#403D39]">{{ strtoupper(substr($firstAuthor->name, 0, 1)) }}</span>
+                                    <a href="{{ route('user.messages.show', $firstAuthor) }}" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                                        @if ($firstAuthor->profile_image_path)
+                                            <img src="{{ asset('storage/' . $firstAuthor->profile_image_path) }}" alt="{{ $firstAuthor->name }}" class="h-10 w-10 rounded-full object-cover">
+                                        @else
+                                            <div class="h-10 w-10 rounded-full bg-[#FFFCF2] flex items-center justify-center">
+                                                <span class="text-sm font-semibold text-[#403D39]">{{ strtoupper(substr($firstAuthor->name, 0, 1)) }}</span>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <p class="font-semibold text-[#252422]">{{ $firstAuthor->name }}</p>
+                                            <p class="text-xs text-[#CCC5B9]">Click to message</p>
                                         </div>
-                                    @endif
+                                    </a>
                                 @else
-                                    <div class="h-10 w-10 rounded-full bg-[#FFFCF2] flex items-center justify-center">
-                                        <span class="text-sm font-semibold text-[#403D39]">{{ strtoupper(substr($thesis->author, 0, 1)) }}</span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-10 w-10 rounded-full bg-[#FFFCF2] flex items-center justify-center">
+                                            <span class="text-sm font-semibold text-[#403D39]">{{ strtoupper(substr($thesis->author, 0, 1)) }}</span>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-[#252422]">{{ $thesis->author }}</p>
+                                        </div>
                                     </div>
                                 @endif
-                                <div>
-                                    <p class="font-semibold text-[#252422]">{{ $thesis->author }}</p>
-                                </div>
                             </div>
                         </div>
 
@@ -130,8 +138,21 @@
                             </div>
                             <p class="text-sm text-[#403D39] mb-3">{{ $thesis->description }}</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <div class="relative group">
-                                    <div class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20 cursor-pointer hover:border-[#EB5E28] transition-colors">
+                                @php
+                                    $primaryAuthor = \App\Models\User::where('name', $thesis->author)->where('role', 'author')->first();
+                                @endphp
+                                @if ($primaryAuthor)
+                                    <a href="{{ route('user.messages.show', $primaryAuthor) }}" class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20 cursor-pointer hover:border-[#EB5E28] transition-colors">
+                                        <div class="h-5 w-5 rounded-full bg-[#EB5E28] flex items-center justify-center">
+                                            <span class="text-xs font-semibold text-white">{{ strtoupper(substr($thesis->author, 0, 1)) }}</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-[#252422]">{{ $thesis->author }}</p>
+                                            <p class="text-xs text-[#EB5E28]">Primary Author</p>
+                                        </div>
+                                    </a>
+                                @else
+                                    <div class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20">
                                         <div class="h-5 w-5 rounded-full bg-[#EB5E28] flex items-center justify-center">
                                             <span class="text-xs font-semibold text-white">{{ strtoupper(substr($thesis->author, 0, 1)) }}</span>
                                         </div>
@@ -140,48 +161,21 @@
                                             <p class="text-xs text-[#EB5E28]">Primary Author</p>
                                         </div>
                                     </div>
-                                    <!-- Hover Popup -->
-                                    <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-50">
-                                        <div class="bg-white rounded-xl shadow-lg border border-[#CCC5B9]/20 p-3 min-w-[200px]">
-                                            <p class="text-sm font-semibold text-[#252422] mb-2">Message {{ $thesis->author }}</p>
-                                            @php
-                                                $primaryAuthor = \App\Models\User::where('name', $thesis->author)->where('role', 'author')->first();
-                                            @endphp
-                                            @if ($primaryAuthor)
-                                                <a href="{{ route('user.messages.show', $primaryAuthor) }}" class="block w-full px-4 py-2 bg-[#EB5E28] text-white text-xs font-medium rounded-lg hover:bg-[#d45220] transition-colors text-center">
-                                                    Send Message
-                                                </a>
-                                            @else
-                                                <p class="text-xs text-[#CCC5B9]">Author not found</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
+                                @endif
                                 @foreach ($thesis->coAuthors as $coAuthor)
-                                    <div class="relative group">
-                                        <div class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20 cursor-pointer hover:border-[#EB5E28] transition-colors">
-                                            @if ($coAuthor->profile_image_path)
-                                                <img src="{{ asset('storage/' . $coAuthor->profile_image_path) }}" alt="{{ $coAuthor->name }}" class="h-5 w-5 rounded-full object-cover">
-                                            @else
-                                                <div class="h-5 w-5 rounded-full bg-[#403D39] flex items-center justify-center">
-                                                    <span class="text-xs font-semibold text-white">{{ strtoupper(substr($coAuthor->name, 0, 1)) }}</span>
-                                                </div>
-                                            @endif
-                                            <div>
-                                                <p class="text-xs font-medium text-[#252422]">{{ $coAuthor->name }}</p>
-                                                <p class="text-xs text-[#CCC5B9]">Co-Author</p>
+                                    <a href="{{ route('user.messages.show', $coAuthor) }}" class="flex items-center gap-2 bg-[#FFFCF2] rounded-lg px-3 py-2 border border-[#CCC5B9]/20 cursor-pointer hover:border-[#EB5E28] transition-colors">
+                                        @if ($coAuthor->profile_image_path)
+                                            <img src="{{ asset('storage/' . $coAuthor->profile_image_path) }}" alt="{{ $coAuthor->name }}" class="h-5 w-5 rounded-full object-cover">
+                                        @else
+                                            <div class="h-5 w-5 rounded-full bg-[#403D39] flex items-center justify-center">
+                                                <span class="text-xs font-semibold text-white">{{ strtoupper(substr($coAuthor->name, 0, 1)) }}</span>
                                             </div>
+                                        @endif
+                                        <div>
+                                            <p class="text-xs font-medium text-[#252422]">{{ $coAuthor->name }}</p>
+                                            <p class="text-xs text-[#CCC5B9]">Co-Author</p>
                                         </div>
-                                        <!-- Hover Popup -->
-                                        <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-50">
-                                            <div class="bg-white rounded-xl shadow-lg border border-[#CCC5B9]/20 p-3 min-w-[200px]">
-                                                <p class="text-sm font-semibold text-[#252422] mb-2">Message {{ $coAuthor->name }}</p>
-                                                <a href="{{ route('user.messages.show', $coAuthor) }}" class="block w-full px-4 py-2 bg-[#EB5E28] text-white text-xs font-medium rounded-lg hover:bg-[#d45220] transition-colors text-center">
-                                                    Send Message
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </a>
                                 @endforeach
                                 <span class="px-3 py-1 rounded-full text-xs font-medium bg-[#FFFCF2] text-[#403D39]">
                                     {{ $thesis->thesis_date->format('M d, Y') }}
@@ -377,20 +371,17 @@
             items.forEach(item => {
                 const title = item.dataset.title;
                 const author = item.dataset.author;
-                const department = item.dataset.department;
                 const keywords = item.dataset.keywords;
                 
                 // Check if matches search term
-                if (title.includes(searchTerm) || author.includes(searchTerm) || department.includes(searchTerm) || keywords.includes(searchTerm)) {
+                if (title.includes(searchTerm) || author.includes(searchTerm) || keywords.includes(searchTerm)) {
                     const thesisElement = item.closest('.thesis-feed-item');
                     const titleElement = thesisElement.querySelector('h3');
                     const titleText = titleElement ? titleElement.textContent : '';
-                    const authorElement = thesisElement.querySelector('.flex.items-center.gap-2');
                     
                     recommendations.push({
                         title: titleText,
                         author: author,
-                        department: department,
                         keywords: keywords
                     });
                 }
@@ -414,7 +405,7 @@
                 html += `
                     <div class="p-3 hover:bg-[#FFFCF2] rounded-lg cursor-pointer transition-colors" onclick="selectRecommendation('${rec.title.replace(/'/g, "\\'")}')">
                         <p class="text-sm font-medium text-[#252422]">${highlightedTitle}</p>
-                        <p class="text-xs text-[#CCC5B9]">${rec.author} · ${rec.department}</p>
+                        <p class="text-xs text-[#CCC5B9]">${rec.author}</p>
                     </div>
                 `;
             });
