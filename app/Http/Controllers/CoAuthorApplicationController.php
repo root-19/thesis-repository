@@ -21,7 +21,6 @@ class CoAuthorApplicationController extends Controller
             'description' => ['required', 'string', 'max:2000'],
             'thesis_date' => ['required', 'date'],
             'pdf_file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
-            'department' => ['required', 'string', 'max:255'],
             'co_authors' => ['array'],
             'co_authors.*' => ['exists:users,id'],
         ]);
@@ -34,7 +33,6 @@ class CoAuthorApplicationController extends Controller
             'description' => $request->description,
             'thesis_date' => $request->thesis_date,
             'pdf_file_path' => $pdfPath,
-            'department' => $request->department,
             'status' => 'pending',
         ]);
 

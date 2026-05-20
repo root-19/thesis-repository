@@ -32,19 +32,10 @@
                                     placeholder="Describe your thesis"></textarea>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="thesis_date" class="block text-sm font-medium text-[#252422] mb-2">Thesis Date</label>
-                                    <input type="date" name="thesis_date" id="thesis_date" required
-                                        class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50">
-                                </div>
-
-                                <div>
-                                    <label for="department" class="block text-sm font-medium text-[#252422] mb-2">Department</label>
-                                    <input type="text" name="department" id="department" required
-                                        class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
-                                        placeholder="Enter department">
-                                </div>
+                            <div>
+                                <label for="thesis_date" class="block text-sm font-medium text-[#252422] mb-2">Thesis Date</label>
+                                <input type="date" name="thesis_date" id="thesis_date" required
+                                    class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50">
                             </div>
 
                             <div>
