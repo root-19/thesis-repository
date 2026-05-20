@@ -39,6 +39,13 @@
                             </div>
 
                             <div>
+                                <label for="keywords" class="block text-sm font-medium text-[#252422] mb-2">Keywords</label>
+                                <input type="text" name="keywords" id="keywords"
+                                    class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
+                                    placeholder="Enter keywords separated by commas">
+                            </div>
+
+                            <div>
                                 <label for="pdf_file" class="block text-sm font-medium text-[#252422] mb-2">PDF File</label>
                                 <input type="file" name="pdf_file" id="pdf_file" accept=".pdf" required
                                     class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50">

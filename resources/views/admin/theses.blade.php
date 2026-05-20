@@ -18,7 +18,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Title</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Author</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Department</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Keywords</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Thesis Date</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Uploaded By</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-[#403D39] uppercase tracking-wider">Actions</th>
@@ -60,7 +60,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-[#403D39]">{{ $thesis->department }}</div>
+                                        <div class="text-sm text-[#403D39] truncate max-w-xs">{{ $thesis->keywords ?? 'N/A' }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-[#403D39]">{{ $thesis->thesis_date->format('M d, Y') }}</div>

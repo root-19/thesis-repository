@@ -35,13 +35,15 @@
 
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                         <div class="bg-white rounded-lg p-3 border border-[#CCC5B9]/20">
-                                            <p class="text-xs text-[#CCC5B9]">Department</p>
-                                            <p class="text-sm font-medium text-[#252422]">{{ $application->department }}</p>
-                                        </div>
-                                        <div class="bg-white rounded-lg p-3 border border-[#CCC5B9]/20">
                                             <p class="text-xs text-[#CCC5B9]">Thesis Date</p>
                                             <p class="text-sm font-medium text-[#252422]">{{ $application->thesis_date->format('M d, Y') }}</p>
                                         </div>
+                                        @if ($application->keywords)
+                                            <div class="bg-white rounded-lg p-3 border border-[#CCC5B9]/20">
+                                                <p class="text-xs text-[#CCC5B9]">Keywords</p>
+                                                <p class="text-sm font-medium text-[#252422]">{{ $application->keywords }}</p>
+                                            </div>
+                                        @endif
                                         @if ($application->pdf_file_path)
                                             <div class="bg-white rounded-lg p-3 border border-[#CCC5B9]/20">
                                                 <p class="text-xs text-[#CCC5B9]">PDF File</p>
@@ -87,7 +89,7 @@
                                             <form method="POST" action="{{ route('co-author-application.approve', $application) }}">
                                                 @csrf
                                                 <button type="submit" class="px-4 py-2 bg-[#EB5E28] text-white rounded-lg text-sm font-medium hover:bg-[#d45220] transition-colors">
-                                                    Approve (Make Authors)
+                                                    Approve & Upload Thesis
                                                 </button>
                                             </form>
 

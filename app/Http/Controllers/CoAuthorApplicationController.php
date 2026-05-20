@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CoAuthorApplication;
+use App\Models\Thesis;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class CoAuthorApplicationController extends Controller
 {
@@ -21,6 +23,7 @@ class CoAuthorApplicationController extends Controller
             'description' => ['required', 'string', 'max:2000'],
             'thesis_date' => ['required', 'date'],
             'pdf_file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
+            'keywords' => ['nullable', 'string'],
             'co_authors' => ['array'],
             'co_authors.*' => ['exists:users,id'],
         ]);
@@ -33,6 +36,7 @@ class CoAuthorApplicationController extends Controller
             'description' => $request->description,
             'thesis_date' => $request->thesis_date,
             'pdf_file_path' => $pdfPath,
+            'keywords' => $request->keywords,
             'status' => 'pending',
         ]);
 
@@ -65,7 +69,28 @@ class CoAuthorApplicationController extends Controller
             $coAuthor->update(['role' => 'author']);
         });
 
-        return back()->with('status', 'Application approved! Users are now authors.');
+        // Move PDF file from co-author-applications to theses folder
+        $newPdfPath = str_replace('co-author-applications/', 'theses/', $application->pdf_file_path);
+        Storage::disk('public')->copy($application->pdf_file_path, $newPdfPath);
+
+        // Create thesis from application
+        $thesis = Thesis::create([
+            'user_id' => $application->user_id,
+            'title' => $application->title,
+            'description' => $application->description,
+            'thesis_date' => $application->thesis_date,
+            'author' => $application->user->name,
+            'pdf_file_path' => $newPdfPath,
+            'keywords' => $application->keywords,
+        ]);
+
+        // Attach co-authors to thesis
+        if ($application->coAuthors()->count() > 0) {
+            $coAuthorIds = $application->coAuthors()->pluck('users.id')->toArray();
+            $thesis->coAuthors()->attach($coAuthorIds);
+        }
+
+        return back()->with('status', 'Application approved! Users are now authors and thesis has been uploaded.');
     }
 
     public function reject(Request $request, CoAuthorApplication $application): RedirectResponse

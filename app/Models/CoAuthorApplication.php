@@ -17,7 +17,7 @@ class CoAuthorApplication extends Model
         'description',
         'thesis_date',
         'pdf_file_path',
-        'department',
+        'keywords',
         'status',
         'rejection_reason',
     ];
