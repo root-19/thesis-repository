@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CoAuthorApplication;
 use App\Models\Thesis;
+use App\Models\User;
+use App\Models\Notification as NotificationModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -43,6 +45,20 @@ class CoAuthorApplicationController extends Controller
         // Attach co-authors if provided
         if ($request->has('co_authors')) {
             $application->coAuthors()->attach($request->co_authors);
+        }
+
+        // Notify all admins about the new application
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            NotificationModel::create([
+                'user_id' => $admin->id,
+                'type' => 'co_author_application',
+                'data' => [
+                    'title' => 'New Co-Author Application',
+                    'message' => "{$application->user->name} has submitted a co-author application for: {$application->title}",
+                    'application_id' => $application->id,
+                ],
+            ]);
         }
 
         return back()->with('status', 'Co-author application submitted successfully!');
@@ -88,6 +104,30 @@ class CoAuthorApplicationController extends Controller
         if ($application->coAuthors()->count() > 0) {
             $coAuthorIds = $application->coAuthors()->pluck('users.id')->toArray();
             $thesis->coAuthors()->attach($coAuthorIds);
+        }
+
+        // Notify the applicant that their application was approved and thesis uploaded
+        NotificationModel::create([
+            'user_id' => $application->user_id,
+            'type' => 'application_approved',
+            'data' => [
+                'title' => 'Application Approved',
+                'message' => "Your co-author application for '{$application->title}' has been approved and your thesis has been uploaded.",
+                'thesis_id' => $thesis->id,
+            ],
+        ]);
+
+        // Notify co-authors about the thesis upload
+        foreach ($application->coAuthors as $coAuthor) {
+            NotificationModel::create([
+                'user_id' => $coAuthor->id,
+                'type' => 'thesis_uploaded',
+                'data' => [
+                    'title' => 'New Thesis Uploaded',
+                    'message' => "A new thesis '{$thesis->title}' has been uploaded with you as a co-author.",
+                    'thesis_id' => $thesis->id,
+                ],
+            ]);
         }
 
         return back()->with('status', 'Application approved! Users are now authors and thesis has been uploaded.');

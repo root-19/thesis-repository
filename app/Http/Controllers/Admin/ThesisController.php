@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Thesis;
+use App\Models\User;
+use App\Models\Notification as NotificationModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -55,6 +57,22 @@ class ThesisController extends Controller
             
             // Change co-authors role to author
             \App\Models\User::whereIn('id', $request->co_authors)->update(['role' => 'author']);
+
+            // Notify co-authors about the thesis upload
+            foreach ($request->co_authors as $coAuthorId) {
+                $coAuthor = User::find($coAuthorId);
+                if ($coAuthor) {
+                    NotificationModel::create([
+                        'user_id' => $coAuthor->id,
+                        'type' => 'thesis_uploaded',
+                        'data' => [
+                            'title' => 'New Thesis Uploaded',
+                            'message' => "A new thesis '{$thesis->title}' has been uploaded with you as a co-author.",
+                            'thesis_id' => $thesis->id,
+                        ],
+                    ]);
+                }
+            }
         }
 
         return redirect()->route('admin.theses')->with('status', 'Thesis uploaded successfully. Authors added to thesis.');
