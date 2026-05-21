@@ -5,18 +5,12 @@
         <div class="bg-gradient-to-b from-white to-[#FFFCF2] py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#EB5E28]/10 text-[#EB5E28] text-sm font-semibold mb-6">
-                        <span class="w-2 h-2 rounded-full bg-[#EB5E28] animate-pulse"></span>
-                        Arcoe
-                    </div>
-
                     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-[#252422] mb-4">
-                        Discover Knowledge.<br>
-                        <span class="text-[#EB5E28]">Explore Research.</span>
+                        Your Research Hub.<br>
+                        <span class="text-[#EB5E28]">Discover & Connect.</span>
                     </h1>
                     <p class="text-lg md:text-xl text-[#403D39] leading-relaxed max-w-3xl mx-auto mb-8">
-                        Access thesis papers, capstone projects, and scholarly documents uploaded by administrators. Search by title, author, or keyword to find the research you need.
+                        Access and explore thesis papers, capstone projects, and scholarly documents. Connect with researchers, bookmark your favorite studies, and discover new knowledge.
                     </p>
 
                     <!-- Quick Stats -->
@@ -118,23 +112,29 @@
                         <div class="p-4">
                             <div class="flex items-start justify-between mb-2">
                                 <h3 class="text-lg font-semibold text-[#252422]">{{ $thesis->title }}</h3>
-                                <form method="POST" action="{{ route('thesis.save', $thesis) }}">
-                                    @csrf
-                                    @php
-                                        $isSaved = auth()->user()->savedTheses()->where('thesis_id', $thesis->id)->exists();
-                                    @endphp
-                                    <button type="submit" class="p-2 rounded-full hover:bg-[#FFFCF2] transition-colors group">
-                                        @if ($isSaved)
+                                @php
+                                    $isBookmarked = \App\Models\Bookmark::where('user_id', auth()->id())->where('thesis_id', $thesis->id)->exists();
+                                @endphp
+                                @if ($isBookmarked)
+                                    <form method="POST" action="{{ route('bookmarks.destroy', $thesis) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-2 rounded-full hover:bg-[#FFFCF2] transition-colors group" title="Remove bookmark">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28]" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                                             </svg>
-                                        @else
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('bookmarks.store', $thesis) }}">
+                                        @csrf
+                                        <button type="submit" class="p-2 rounded-full hover:bg-[#FFFCF2] transition-colors group" title="Bookmark this study">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] group-hover:text-[#EB5E28] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                                             </svg>
-                                        @endif
-                                    </button>
-                                </form>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                             <p class="text-sm text-[#403D39] mb-3">{{ $thesis->description }}</p>
                             <div class="flex flex-wrap gap-2 mb-4">
@@ -461,5 +461,16 @@
             const repliesSection = document.getElementById('replies-' + commentId);
             repliesSection.classList.toggle('hidden');
         }
+
+        // Scroll to comments section after comment submission
+        @if (session('comment_submitted') && session('thesis_id'))
+            document.addEventListener('DOMContentLoaded', function() {
+                const commentsSection = document.getElementById('comments-{{ session('thesis_id') }}');
+                if (commentsSection) {
+                    commentsSection.classList.remove('hidden');
+                    commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        @endif
     </script>
 </x-app-layout>

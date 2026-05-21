@@ -25,14 +25,13 @@ class CommentController extends Controller
             'parent_id' => $request->parent_id,
         ]);
 
-        // Notify admin about new comment
-        $admin = User::where('role', 'admin')->first();
-        if ($admin && $admin->id !== auth()->id()) {
+        // Notify thesis author about new comment (not the commenter themselves)
+        if ($thesis->user_id !== auth()->id()) {
             Notification::create([
-                'user_id' => $admin->id,
+                'user_id' => $thesis->user_id,
                 'type' => 'comment',
                 'data' => [
-                    'message' => auth()->user()->name . ' commented on a thesis',
+                    'message' => auth()->user()->name . ' commented on your thesis: ' . $thesis->title,
                     'thesis_id' => $thesis->id,
                     'comment_id' => $comment->id,
                 ],
@@ -59,7 +58,7 @@ class CommentController extends Controller
             }
         }
 
-        return back();
+        return back()->with(['status' => 'Comment added successfully.', 'comment_submitted' => true, 'thesis_id' => $thesis->id]);
     }
 
     public function destroy(Comment $comment): RedirectResponse

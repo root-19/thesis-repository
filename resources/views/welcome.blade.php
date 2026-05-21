@@ -57,9 +57,9 @@
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-[#403D39]/10">
         <div class="w-full max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2 font-bold text-xl text-[#252422]">
+            <a href="/" class="flex items-center font-bold text-xl text-[#252422]">
                 <img src="/logo.png" alt="Arcoe" class="h-10 w-10">
-                <span>Arcoe</span>
+                {{-- <span>Arcoe</span> --}}
             </a>
             <div class="flex items-center gap-6">
                 <a href="#features" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Features</a>
@@ -87,18 +87,25 @@
                     Academic Research Repository
                 </div>
                 <h1 class="text-5xl md:text-7xl font-extrabold leading-[1.1] text-[#252422] mb-6 animate-fade-up animate-fade-up-delay-1">
-                    Discover Knowledge.<br>
-                    <span class="text-[#EB5E28]">Explore Research.</span>
+                    Interactive Research<br>
+                    <span class="text-[#EB5E28]">Starts Here.</span>
                 </h1>
                 <p class="text-lg md:text-xl text-[#403D39] leading-relaxed max-w-2xl mb-10 animate-fade-up animate-fade-up-delay-2">
-                    Access thousands of thesis papers, capstone projects, and scholarly articles. Search by title, author, or keyword to find the research you need.
+                    Access and Retrieve undergraduate thesis papers authored by Computer Engineering students at the Polytechnic University of the Philippines.<br><br>
+                    Interact with Thesis Researchers.<br>
+                    Search by title, author, or keyword to find the thesis you need.
                 </p>
 
-                <form class="flex items-center gap-3 bg-white rounded-2xl p-2 shadow-xl shadow-[#252422]/10 border border-[#CCC5B9]/30 max-w-2xl animate-fade-up animate-fade-up-delay-3" id="authorSearchForm" autocomplete="off">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                    <input id="authorSearchInput" type="search" placeholder="Search thesis titles, authors, or keywords..." aria-label="Search research papers" class="flex-1 border-none bg-transparent px-2 py-3 text-base text-[#252422] focus:outline-none placeholder:text-[#CCC5B9]">
-                    <button type="submit" class="px-7 py-3.5 rounded-xl bg-[#252422] text-white font-semibold hover:bg-[#403D39] transition-all duration-300 shadow-lg">Search</button>
-                </form>
+                <div class="relative max-w-2xl animate-fade-up animate-fade-up-delay-3">
+                    <form class="flex items-center gap-3 bg-white rounded-2xl p-2 shadow-xl shadow-[#252422]/10 border border-[#CCC5B9]/30" id="authorSearchForm" autocomplete="off">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <input id="authorSearchInput" type="search" placeholder="Search thesis titles, authors, or keywords..." aria-label="Search research papers" class="flex-1 border-none bg-transparent px-2 py-3 text-base text-[#252422] focus:outline-none placeholder:text-[#CCC5B9]">
+                        <button type="submit" class="px-7 py-3.5 rounded-xl bg-[#252422] text-white font-semibold hover:bg-[#403D39] transition-all duration-300 shadow-lg">Search</button>
+                    </form>
+                    <!-- Search Recommendations -->
+                    <div id="search-recommendations" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-[#CCC5B9]/20 hidden z-50 max-h-96 overflow-y-auto">
+                    </div>
+                </div>
 
              
             </div>
@@ -115,7 +122,7 @@
                 </div>
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['total'] }}</div>
-                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Thesis Documents</div>
+                    <div class="text-sm text-[#403D39] font-medium uppercase tracking-wider">Researchers</div>
                 </div>
                 <div class="glass-card rounded-2xl p-6 text-center animate-fade-up animate-fade-up-delay-3">
                     <div class="text-4xl md:text-5xl font-extrabold text-[#252422] mb-1">{{ $stats['years'] }}</div>
@@ -128,9 +135,9 @@
     <!-- Features Section -->
     <section id="features" class="py-24">
         <div class="w-full max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Why Arcoe</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">Powerful Tools for Research Discovery</h2>
+            <div class="text-center max-w-3xl mx-auto mb-16">COE
+                <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-wideItAi</Wheaen>Bems Inteactive
+                <h2 class="text-3xl md:text-5xl foAn int-eactavelplatf rmewhtr-#users2ca2 access mrettiev-mb-4">taPkft Research ersDsbout scecific thosiery</h2>
                 <p class="text-lg text-[#403D39]">Everything you need to find, read, and learn from academic research papers.</p>
             </div>
 
@@ -156,15 +163,15 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                     </div>
                     <h3 class="text-xl font-bold text-[#252422] mb-2">PDF Preview</h3>
-                    <p class="text-[#403D39] leading-relaxed">View and read thesis documents directly in your browser with our built-in PDF preview system.</p>
+                    <p class="text-[#403D39] leading-relaxed">View and read thesis documents directly in your browser.</p>
                 </div>
 
                 <div class="group p-8 rounded-3xl bg-white border border-[#CCC5B9]/20 hover:border-[#EB5E28]/30 hover:shadow-xl hover:shadow-[#EB5E28]/5 transition-all duration-300">
                     <div class="w-12 h-12 rounded-2xl bg-[#EB5E28]/10 flex items-center justify-center mb-6 group-hover:bg-[#EB5E28] transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-[#252422] mb-2">Rich Metadata</h3>
-                    <p class="text-[#403D39] leading-relaxed">Access detailed information including author, adviser, year, keywords, and abstract for every paper.</p>
+                    <h3 class="text-xl font-bold text-[#252422] mb-2">Download/Upload</h3>
+                    <p class="text-[#403D39] leading-relaxed">Download thesis studies and upload thesis papers as a Researcher.</p>
                 </div>
 
                 <div class="group p-8 rounded-3xl bg-white border border-[#CCC5B9]/20 hover:border-[#EB5E28]/30 hover:shadow-xl hover:shadow-[#EB5E28]/5 transition-all duration-300">
@@ -178,8 +185,8 @@
                 <div class="group p-8 rounded-3xl bg-white border border-[#CCC5B9]/20 hover:border-[#EB5E28]/30 hover:shadow-xl hover:shadow-[#EB5E28]/5 transition-all duration-300">
                     <div class="w-12 h-12 rounded-2xl bg-[#EB5E28]/10 flex items-center justify-center mb-6 group-hover:bg-[#EB5E28] transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-[#252422] mb-2">Responsive Reading</h3>
+                    </div>Iteract
+                    <h3 class="text-xl font-bold text-[#252422] mb-2i>pvRacting<with r/s>achers wth thpersalmessgean publ commntan rlyfeu
                     <p class="text-[#403D39] leading-relaxed">Enjoy an optimized reading experience on any device — desktop, tablet, or mobile phone.</p>
                 </div>
             </div>
@@ -201,7 +208,7 @@
 
             @if ($thesisCollection->isNotEmpty())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="authorGrid">
-                    @foreach ($thesisCollection->take(9) as $thesis)
+                    @foreach ($thesisCollection->take(6) as $thesis)
                         @php
                             $author = $thesis->author ?? 'Unknown';
                             $department = $thesis->department ?? 'General';
@@ -241,25 +248,25 @@
         <div class="w-full max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-sm font-semibold text-[#EB5E28] uppercase tracking-widest">Simple Process</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">How Arcoe Works</h2>
-                <p class="text-lg text-[#403D39]">Find the research you need in three simple steps.</p>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-[#252422] mt-3 mb-4">How ArCOE Works</h2>
+                <p class="text-lg text-[#403D39]">Find the thesis you need.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="text-center p-8">
                     <div class="w-16 h-16 rounded-2xl bg-[#EB5E28] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#EB5E28]/20">1</div>
                     <h3 class="text-xl font-bold text-[#252422] mb-3">Search Research</h3>
-                    <p class="text-[#403D39] leading-relaxed">Enter keywords, titles, or authors in our powerful search bar to find relevant academic papers.</p>
+                    <p class="text-[#403D39] leading-relaxed">Search by title, author, or keyword to find the thesis you need.</p>
                 </div>
                 <div class="text-center p-8">
                     <div class="w-16 h-16 rounded-2xl bg-[#252422] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg">2</div>
-                    <h3 class="text-xl font-bold text-[#252422] mb-3">Explore Topics</h3>
-                    <p class="text-[#403D39] leading-relaxed">Browse by year and discover trending research topics in your field of interest.</p>
+                    <h3 class="text-xl font-bold text-[#252422] mb-3">Read & Learn</h3>
+                    <p class="text-[#403D39] leading-relaxed">Access full papers and collaborate with other users and researchers of topics you preferred.</p>
                 </div>
                 <div class="text-center p-8">
                     <div class="w-16 h-16 rounded-2xl bg-[#EB5E28] text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#EB5E28]/20">3</div>
-                    <h3 class="text-xl font-bold text-[#252422] mb-3">Read & Learn</h3>
-                    <p class="text-[#403D39] leading-relaxed">Access full papers, read abstracts, view metadata, and download documents for your academic needs.</p>
+                    <h3 class="text-xl font-bold text-[#252422] mb-3">Save</h3>
+                    <p class="text-[#403D39] leading-relaxed">Download thesis papers for your academic needs.</p>
                 </div>
             </div>
         </div>
@@ -282,27 +289,10 @@
         <div class="w-full max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div>
-                    <a href="/" class="flex items-center gap-2 font-bold text-xl text-[#252422]">
+                    <a href="/" class="flex items-center font-bold text-xl text-[#252422]">
                         <img src="/logo.png" alt="Arcoe" class="h-10 w-10">
-                        <span>Arcoe</span>
                     </a>
-                    <p class="text-sm text-[#403D39] leading-relaxed">A modern academic research repository for discovering thesis papers, capstone projects, and scholarly articles.</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-[#252422] mb-4">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#features" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Features</a></li>
-                        <li><a href="#research" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Research</a></li>
-                        <li><a href="#research" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Research Papers</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-[#252422] mb-4">Platform</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">About Us</a></li>
-                        <li><a href="#" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Contact</a></li>
-                        <li><a href="{{ route('login') }}" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Admin Portal</a></li>
-                    </ul>
+                    <p class="text-sm text-[#403D39] leading-relaxed">A WEB-BASED CENTRALIZED THESIS REPOSITORY SYSTEM FOR ENHANCED ACADEMIC INFORMATION RETRIEVAL AND USER INTERACTION</p>
                 </div>
                 <div>
                     <h4 class="font-semibold text-[#252422] mb-4">Connect</h4>
@@ -318,6 +308,14 @@
                         </a>
                     </div>
                 </div>
+                <div>
+                    <h4 class="font-semibold text-[#252422] mb-4">Platform</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Contact</a></li>
+                        <li><a href="{{ route('login') }}" class="text-sm text-[#403D39] hover:text-[#EB5E28] transition-colors">Admin Portal</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="pt-8 border-t border-[#CCC5B9]/20 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-sm text-[#CCC5B9]">&copy; {{ date('Y') }} Arcoe. All rights reserved.</p>
@@ -327,11 +325,15 @@
     </footer>
 
     <script>
+        let searchTimeout;
+        let searchRecommendationsTimeout;
+
         const searchForm = document.getElementById('authorSearchForm');
         const searchInput = document.getElementById('authorSearchInput');
         const resetFilters = document.getElementById('resetFilters');
         const authorCards = Array.from(document.querySelectorAll('[data-author-card]'));
         const emptyState = document.getElementById('emptyState');
+        const searchRecommendations = document.getElementById('search-recommendations');
 
         const filterAuthors = (query) => {
             const normalizedQuery = query.trim().toLowerCase();
@@ -347,14 +349,103 @@
             emptyState.style.display = visible === 0 ? 'block' : 'none';
         };
 
-        searchForm?.addEventListener('submit', (event) => {
-            event.preventDefault();
-            filterAuthors(searchInput?.value || '');
-            document.getElementById('research')?.scrollIntoView({ behavior: 'smooth' });
+        searchInput?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.trim();
+            
+            // Filter authors in real-time
+            filterAuthors(searchTerm);
+            
+            // Show search recommendations
+            clearTimeout(searchRecommendationsTimeout);
+            
+            if (searchTerm.length >= 2) {
+                searchRecommendationsTimeout = setTimeout(() => {
+                    fetchSearchRecommendations(searchTerm);
+                    // Auto-scroll to research section when keywords are entered
+                    document.getElementById('research')?.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            } else {
+                searchRecommendations.classList.add('hidden');
+            }
         });
 
-        searchInput?.addEventListener('input', (event) => {
-            filterAuthors(event.target.value || '');
+        // Hide recommendations when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#authorSearchForm') && !e.target.closest('#search-recommendations')) {
+                searchRecommendations.classList.add('hidden');
+            }
+        });
+
+        function fetchSearchRecommendations(searchTerm) {
+            const items = document.querySelectorAll('[data-author-card]');
+            const recommendations = [];
+            
+            items.forEach(item => {
+                const filterText = item.dataset.filterText || '';
+                const titleElement = item.querySelector('h3');
+                const titleText = titleElement ? titleElement.textContent : '';
+                const authorElement = item.querySelector('p span');
+                const authorText = authorElement ? authorElement.textContent : '';
+                
+                // Check if matches search term
+                if (filterText.includes(searchTerm.toLowerCase())) {
+                    recommendations.push({
+                        title: titleText,
+                        author: authorText
+                    });
+                }
+            });
+
+            displayRecommendations(recommendations, searchTerm);
+        }
+
+        function displayRecommendations(recommendations, searchTerm) {
+            if (recommendations.length === 0) {
+                searchRecommendations.innerHTML = '<div class="p-4 text-center text-[#CCC5B9]">No matching Thesis found</div>';
+                searchRecommendations.classList.remove('hidden');
+                return;
+            }
+
+            let html = '<div class="p-2">';
+            recommendations.slice(0, 5).forEach(rec => {
+                const highlightedTitle = highlightText(rec.title, searchTerm);
+                html += `
+                    <div class="p-3 hover:bg-[#FFFCF2] rounded-lg cursor-pointer transition-colors" onclick="selectRecommendation('${rec.title.replace(/'/g, "\\'")}')">
+                        <p class="text-sm font-medium text-[#252422]">${highlightedTitle}</p>
+                        <p class="text-xs text-[#CCC5B9]">${rec.author}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            searchRecommendations.innerHTML = html;
+            searchRecommendations.classList.remove('hidden');
+        }
+
+        function highlightText(text, searchTerm) {
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="bg-[#EB5E28]/20 text-[#EB5E28] font-semibold">$1</span>');
+        }
+
+        function selectRecommendation(title) {
+            searchInput.value = title;
+            searchRecommendations.classList.add('hidden');
+            filterAuthors(title);
+            document.getElementById('research')?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        searchForm?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const searchTerm = searchInput?.value?.trim() || '';
+            filterAuthors(searchTerm);
+            
+            // Only scroll if there are matching results
+            if (searchTerm.length > 0) {
+                const visibleCards = Array.from(document.querySelectorAll('[data-author-card]')).filter(card => card.style.display !== 'none');
+                if (visibleCards.length > 0) {
+                    document.getElementById('research')?.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
         });
 
         resetFilters?.addEventListener('click', () => {
@@ -362,6 +453,7 @@
                 searchInput.value = '';
             }
             filterAuthors('');
+            searchRecommendations.classList.add('hidden');
         });
 
         // Smooth scroll for anchor links

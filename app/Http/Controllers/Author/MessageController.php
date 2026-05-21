@@ -16,7 +16,6 @@ class MessageController extends Controller
     public function index(): View
     {
         $messages = Message::with('sender')
-            ->where('receiver_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get()
             ->unique('sender_id');
@@ -67,5 +66,36 @@ class MessageController extends Controller
         ]);
 
         return back()->with('status', 'Message sent successfully.');
+    }
+
+    public function newMessage(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'message' => ['required', 'string'],
+        ]);
+
+        $message = Message::create([
+            'sender_id' => auth()->id(),
+            'receiver_id' => $request->user_id,
+            'message' => $request->message,
+            'is_read' => false,
+        ]);
+
+        broadcast(new MessageSent($message));
+
+        // Notify user about new message from author
+        Notification::create([
+            'user_id' => $request->user_id,
+            'type' => 'message',
+            'data' => [
+                'message' => 'Author sent you a message',
+                'sender_id' => auth()->id(),
+            ],
+            'notifiable_type' => Message::class,
+            'notifiable_id' => $message->id,
+        ]);
+
+        return redirect()->route('author.messages.show', $request->user_id)->with('status', 'Message sent successfully.');
     }
 }

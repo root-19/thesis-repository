@@ -3,8 +3,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h2 class="text-2xl font-bold text-[#252422]">Co-Author Applications</h2>
-                    <p class="text-[#CCC5B9] mt-1">Review and manage co-author applications</p>
+                    <h2 class="text-2xl font-bold text-[#252422]">Reseacher Applications</h2>
+                    <p class="text-[#CCC5B9] mt-1">Review and manage Researcher applications</p>
                 </div>
 
                 <div class="p-6">

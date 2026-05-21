@@ -15,7 +15,7 @@ class ThesisController extends Controller
 {
     public function index(): View
     {
-        $theses = Thesis::with('user')->orderBy('created_at', 'desc')->get();
+        $theses = Thesis::with(['user', 'coAuthors'])->orderBy('created_at', 'desc')->get();
 
         return view('admin.theses', compact('theses'));
     }

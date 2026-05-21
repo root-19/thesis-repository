@@ -49,45 +49,69 @@ class UserMessageController extends Controller
         return back()->with('status', 'Message sent successfully.');
     }
 
-    public function index(): View
+    public function newMessage(Request $request): RedirectResponse
     {
-        // Get only authors that the current user has messaged with
-        $messagedAuthorIds = Message::where(function ($query) {
-            $query->where('sender_id', auth()->id())
-                ->orWhere('receiver_id', auth()->id());
-        })->pluck('sender_id')
-            ->merge(Message::where(function ($query) {
-                $query->where('sender_id', auth()->id())
-                    ->orWhere('receiver_id', auth()->id());
-            })->pluck('receiver_id'))
-            ->unique()
-            ->toArray();
+        $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'message' => ['required', 'string'],
+        ]);
 
-        $authors = User::where('role', 'author')
-            ->whereIn('id', $messagedAuthorIds)
-            ->get();
+        $message = Message::create([
+            'sender_id' => auth()->id(),
+            'receiver_id' => $request->user_id,
+            'message' => $request->message,
+            'is_read' => false,
+        ]);
 
-        return view('user-messages', compact('authors'));
+        broadcast(new MessageSent($message));
+
+        // Notify user about new message
+        Notification::create([
+            'user_id' => $request->user_id,
+            'type' => 'message',
+            'data' => [
+                'message' => auth()->user()->name . ' sent you a message',
+                'sender_id' => auth()->id(),
+            ],
+            'notifiable_type' => Message::class,
+            'notifiable_id' => $message->id,
+        ]);
+
+        return redirect()->route('user.messages.show', $request->user_id)->with('status', 'Message sent successfully.');
     }
 
-    public function show(User $author): View|RedirectResponse
+    public function index(): View
     {
-        if ($author->role !== 'author') {
-            return back()->with('error', 'Invalid author.');
-        }
-
-        $messages = Message::with('receiver')
-            ->where(function ($query) use ($author) {
+        // Get all messages the user has sent or received
+        $messages = Message::with('sender', 'receiver')
+            ->where(function ($query) {
                 $query->where('sender_id', auth()->id())
-                    ->where('receiver_id', $author->id)
-                    ->orWhere(function ($q) use ($author) {
-                        $q->where('receiver_id', auth()->id())
-                            ->where('sender_id', $author->id);
-                    });
+                    ->orWhere('receiver_id', auth()->id());
+            })
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->unique(function ($message) {
+                // Group by the other person in the conversation
+                return $message->sender_id === auth()->id() 
+                    ? $message->receiver_id 
+                    : $message->sender_id;
+            });
+
+        return view('user-messages', compact('messages'));
+    }
+
+    public function show(User $user): View
+    {
+        $messages = Message::with('sender', 'receiver')
+            ->where(function ($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                    ->orWhere('receiver_id', $user->id);
             })
             ->orderBy('created_at', 'asc')
             ->get();
 
-        return view('user-messages', compact('messages', 'author'));
+        $messages->where('receiver_id', auth()->id())->each->update(['is_read' => true]);
+
+        return view('user-messages', compact('messages', 'user'));
     }
 }

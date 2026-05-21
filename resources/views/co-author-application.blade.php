@@ -3,8 +3,8 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h2 class="text-2xl font-bold text-[#252422]">Apply as Author</h2>
-                    <p class="text-[#CCC5B9] mt-1">Submit your thesis to become a co-author</p>
+                    <h2 class="text-2xl font-bold text-[#252422]">Apply as a Researcher</h2>
+                    <p class="text-[#CCC5B9] mt-1">Submit your thesis to become a co-researcher</p>
                 </div>
 
                 <div class="p-6">
@@ -53,10 +53,10 @@
                             </div>
 
                             <div>
-                                <label for="co_authors_search" class="block text-sm font-medium text-[#252422] mb-2">Add Co-Authors</label>
+                                <label for="co_authors_search" class="block text-sm font-medium text-[#252422] mb-2">Add Co-Researchers</label>
                                 <input type="text" id="co_authors_search" name="co_authors_search"
                                     class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
-                                    placeholder="Search users to add as co-authors..."
+                                    placeholder="Search users to add as co-researchers..."
                                     onkeyup="searchCoAuthors(this.value)">
                                 <div id="co_authors_search_results" class="mt-2 space-y-2"></div>
                                 <div id="selected_co_authors" class="mt-4 space-y-2"></div>

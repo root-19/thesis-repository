@@ -3,7 +3,7 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h2 class="text-2xl font-bold text-[#252422]">Recommend Co-Author Team Member</h2>
+                    <h2 class="text-2xl font-bold text-[#252422]">Recommend Researcher Team Member</h2>
                     <p class="text-[#CCC5B9] mt-1">Recommend existing users or new members to join the author team</p>
                 </div>
 
@@ -90,6 +90,18 @@
                                 <textarea name="reason" id="reason" rows="4" required
                                     class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]"
                                     placeholder="Explain why you recommend this person to join the author team"></textarea>
+                            </div>
+
+                            <div>
+                                <label for="thesis_id" class="block text-sm font-medium text-[#252422] mb-2">Thesis (Optional)</label>
+                                <select name="thesis_id" id="thesis_id"
+                                    class="w-full rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50">
+                                    <option value="">Select a thesis to add as co-author (optional)</option>
+                                    @foreach ($theses as $thesis)
+                                        <option value="{{ $thesis->id }}">{{ $thesis->title }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="text-xs text-[#CCC5B9] mt-1">If selected, the approved user will be added as a co-author to this thesis.</p>
                             </div>
 
                             <div class="flex justify-end">

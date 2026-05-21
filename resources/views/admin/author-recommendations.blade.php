@@ -3,8 +3,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h2 class="text-2xl font-bold text-[#252422]">Author Recommendations</h2>
-                    <p class="text-[#CCC5B9] mt-1">Review and manage author team member recommendations</p>
+                    <h2 class="text-2xl font-bold text-[#252422]">Researcher Recommendations</h2>
+                    <p class="text-[#CCC5B9] mt-1">Review and manage researcher team member recommendations</p>
                 </div>
 
                 <div class="p-6">
@@ -49,6 +49,13 @@
                                         <h4 class="text-sm font-semibold text-[#252422] mb-2">Reason for Recommendation</h4>
                                         <p class="text-sm text-[#403D39]">{{ $recommendation->reason }}</p>
                                     </div>
+
+                                    @if ($recommendation->thesis)
+                                        <div class="mb-4 p-3 bg-white rounded-lg border border-[#CCC5B9]/20">
+                                            <p class="text-xs text-[#CCC5B9] mb-1">Thesis</p>
+                                            <p class="text-sm font-medium text-[#252422]">{{ $recommendation->thesis->title }}</p>
+                                        </div>
+                                    @endif
 
                                     <div class="mb-4">
                                         @if ($recommendation->recommendedUser)

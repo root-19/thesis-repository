@@ -52,10 +52,10 @@ class CoAuthorApplicationController extends Controller
         foreach ($admins as $admin) {
             NotificationModel::create([
                 'user_id' => $admin->id,
-                'type' => 'co_author_application',
+                'type' => 'researcher_application',
                 'data' => [
-                    'title' => 'New Co-Author Application',
-                    'message' => "{$application->user->name} has submitted a co-author application for: {$application->title}",
+                    'title' => 'New Researcher Application',
+                    'message' => "{$application->user->name} has submitted a researcher application for: {$application->title}",
                     'application_id' => $application->id,
                 ],
             ]);

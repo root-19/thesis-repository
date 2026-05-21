@@ -2,9 +2,14 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
-                <div class="p-6 border-b border-[#CCC5B9]/20">
-                    <h2 class="text-2xl font-bold text-[#252422]">Author Team</h2>
-                    <p class="text-[#CCC5B9] mt-1">View all approved authors and their team members</p>
+                <div class="p-6 border-b border-[#CCC5B9]/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-[#252422]">Researcher Team</h2>
+                        <p class="text-[#CCC5B9] mt-1">View all approved authors and their team members</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="text" id="authorSearch" placeholder="Search by name or email..." class="px-4 py-2 rounded-xl border border-[#CCC5B9]/40 bg-[#FFFCF2] text-[#252422] placeholder:text-[#CCC5B9] text-sm focus:border-[#EB5E28] focus:ring-2 focus:ring-[#EB5E28]/10 focus:outline-none" onkeyup="filterAuthors()">
+                    </div>
                 </div>
 
                 <div class="p-6">
@@ -52,7 +57,7 @@
                                                 $department = $author->department ?? '-';
                                             }
                                         @endphp
-                                        <tr>
+                                        <tr class="author-row" data-name="{{ strtolower($author->name) }}" data-email="{{ strtolower($author->email) }}">
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
                                                     @if ($author->profile_image_path)
@@ -92,11 +97,26 @@
                         </div>
                     @else
                         <div class="text-center py-12">
-                            <p class="text-[#CCC5B9]">No authors yet.</p>
+                            <p class="text-[#CCC5B9]">No researchers yet.</p>
                         </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function filterAuthors() {
+            const searchTerm = document.getElementById('authorSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('.author-row');
+            
+            rows.forEach(row => {
+                const name = row.dataset.name;
+                const email = row.dataset.email;
+                
+                const matches = name.includes(searchTerm) || email.includes(searchTerm);
+                row.style.display = matches ? '' : 'none';
+            });
+        }
+    </script>
 </x-app-layout>

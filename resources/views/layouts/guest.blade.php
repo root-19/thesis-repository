@@ -26,8 +26,8 @@
             <div class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white shadow-xl shadow-[#252422]/5 overflow-hidden sm:rounded-3xl border border-[#CCC5B9]/20">
                 <div class="mb-8">
                     <a href="/" class="flex items-center gap-2 font-bold text-xl text-[#252422]">
-                        <img src="/logo.png" alt="Arcoe" class="h-10 w-10">
-                        <span>Arcoe</span>
+                        <img src="/logo.png"  class="h-10 w-10">
+                        {{-- <span>Arcoe</span> --}}
                     </a>
                     <p class="mt-2 text-sm text-[#CCC5B9]">Academic Research Repository</p>
                 </div>

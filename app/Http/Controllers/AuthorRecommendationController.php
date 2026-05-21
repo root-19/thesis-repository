@@ -12,12 +12,16 @@ class AuthorRecommendationController extends Controller
 {
     public function create(): View
     {
-        $recommendations = AuthorRecommendation::with(['recommender', 'recommendedUser'])
+        $recommendations = AuthorRecommendation::with(['recommender', 'recommendedUser', 'thesis'])
             ->where('recommender_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('author.recommend', compact('recommendations'));
+        $theses = \App\Models\Thesis::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('author.recommend', compact('recommendations', 'theses'));
     }
 
     public function team(): View
@@ -46,6 +50,7 @@ class AuthorRecommendationController extends Controller
             'recommended_name' => ['nullable', 'required_if:recommendation_type,new_user', 'string', 'max:255'],
             'recommended_email' => ['nullable', 'required_if:recommendation_type,new_user', 'email', 'max:255'],
             'reason' => ['required', 'string', 'max:2000'],
+            'thesis_id' => ['nullable', 'exists:theses,id'],
         ]);
 
         // Check for duplicate pending recommendations
@@ -71,6 +76,7 @@ class AuthorRecommendationController extends Controller
             'recommender_id' => auth()->id(),
             'reason' => $request->reason,
             'status' => 'pending',
+            'thesis_id' => $request->thesis_id,
         ];
 
         if ($request->recommendation_type === 'existing_user') {
@@ -80,14 +86,28 @@ class AuthorRecommendationController extends Controller
             $data['recommended_email'] = $request->recommended_email;
         }
 
-        AuthorRecommendation::create($data);
+        $recommendation = AuthorRecommendation::create($data);
+
+        // Notify all admins about the new recommendation
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            \App\Models\Notification::create([
+                'user_id' => $admin->id,
+                'type' => 'researcher_recommendation',
+                'data' => [
+                    'title' => 'New Researcher Recommendation',
+                    'message' => auth()->user()->name . ' has recommended a new researcher to join the team.',
+                    'recommendation_id' => $recommendation->id,
+                ],
+            ]);
+        }
 
         return back()->with('status', 'Recommendation submitted successfully!');
     }
 
     public function index(): View
     {
-        $recommendations = AuthorRecommendation::with(['recommender', 'recommendedUser'])
+        $recommendations = AuthorRecommendation::with(['recommender', 'recommendedUser', 'thesis'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -103,6 +123,17 @@ class AuthorRecommendationController extends Controller
             $user = $recommendation->recommendedUser;
             if ($user && $user->role !== 'author') {
                 $user->update(['role' => 'author']);
+            }
+
+            // Add the user as a co-author to the thesis if thesis_id is set
+            if ($recommendation->thesis_id && $user) {
+                $thesis = \App\Models\Thesis::find($recommendation->thesis_id);
+                if ($thesis) {
+                    // Check if user is not already a co-author
+                    if (!$thesis->coAuthors()->where('user_id', $user->id)->exists()) {
+                        $thesis->coAuthors()->attach($user->id);
+                    }
+                }
             }
         }
 

@@ -3,14 +3,17 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-[#CCC5B9]/20 overflow-hidden">
-                <div class="p-6 border-b border-[#CCC5B9]/20 flex items-center justify-between">
+                <div class="p-6 border-b border-[#CCC5B9]/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <h3 class="text-lg font-semibold text-[#252422]">Thesis Management</h3>
                         <p class="text-sm text-[#CCC5B9] mt-1">Upload and manage thesis documents</p>
                     </div>
-                    <a href="{{ route('admin.theses.create') }}" class="px-5 py-2.5 rounded-full bg-[#EB5E28] text-white text-sm font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">
-                        Upload Thesis
-                    </a>
+                    <div class="flex items-center gap-3">
+                        <input type="text" id="thesisSearch" placeholder="Search by title, author, keywords, or date..." class="px-4 py-2 rounded-xl border border-[#CCC5B9]/40 bg-[#FFFCF2] text-[#252422] placeholder:text-[#CCC5B9] text-sm focus:border-[#EB5E28] focus:ring-2 focus:ring-[#EB5E28]/10 focus:outline-none" onkeyup="filterTheses()">
+                        <a href="{{ route('admin.theses.create') }}" class="px-5 py-2.5 rounded-full bg-[#EB5E28] text-white text-sm font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">
+                            Upload Thesis
+                        </a>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -26,7 +29,7 @@
                         </thead>
                         <tbody class="divide-y divide-[#CCC5B9]/20">
                             @forelse($theses as $thesis)
-                                <tr class="hover:bg-[#FFFCF2] transition-colors">
+                                <tr class="hover:bg-[#FFFCF2] transition-colors thesis-row" data-title="{{ strtolower($thesis->title) }}" data-author="{{ strtolower($thesis->author) }}" data-keywords="{{ strtolower($thesis->keywords ?? '') }}" data-date="{{ $thesis->thesis_date->format('Y-m-d') }}">
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-medium text-[#252422]">{{ $thesis->title }}</div>
                                         <div class="text-sm text-[#CCC5B9] truncate max-w-xs">{{ $thesis->description }}</div>
@@ -96,6 +99,23 @@
                         </tbody>
                     </table>
                 </div>
+
+    <script>
+        function filterTheses() {
+            const searchTerm = document.getElementById('thesisSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('.thesis-row');
+            
+            rows.forEach(row => {
+                const title = row.dataset.title;
+                const author = row.dataset.author;
+                const keywords = row.dataset.keywords;
+                const date = row.dataset.date;
+                
+                const matches = title.includes(searchTerm) || author.includes(searchTerm) || keywords.includes(searchTerm) || date.includes(searchTerm);
+                row.style.display = matches ? '' : 'none';
+            });
+        }
+    </script>
             </div>
         </div>
     </div>

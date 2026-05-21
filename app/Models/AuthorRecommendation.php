@@ -18,6 +18,7 @@ class AuthorRecommendation extends Model
         'reason',
         'status',
         'rejection_reason',
+        'thesis_id',
     ];
 
     protected $casts = [
@@ -32,6 +33,11 @@ class AuthorRecommendation extends Model
     public function recommendedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recommended_user_id');
+    }
+
+    public function thesis(): BelongsTo
+    {
+        return $this->belongsTo(Thesis::class);
     }
 
     public function isPending(): bool

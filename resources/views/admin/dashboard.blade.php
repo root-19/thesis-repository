@@ -35,12 +35,12 @@
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#CCC5B9]/20">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-[#CCC5B9] uppercase tracking-wider">Pending Verification</p>
-                            <p class="text-3xl font-bold text-[#252422] mt-1">{{ App\Models\User::whereNull('email_verified_at')->count() }}</p>
+                            <p class="text-sm font-medium text-[#CCC5B9] uppercase tracking-wider">Researchers</p>
+                            <p class="text-3xl font-bold text-[#252422] mt-1">{{ App\Models\User::where('role', 'author')->count() }}</p>
                         </div>
                         <div class="w-12 h-12 bg-[#FFFCF2] rounded-xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </div>
                     </div>
@@ -69,31 +69,19 @@
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <a href="#" class="group flex items-center p-4 rounded-xl border border-[#CCC5B9]/20 hover:border-[#EB5E28] hover:bg-[#FFFCF2] transition-all">
+                        <a href="{{ route('admin.users') }}" class="group flex items-center p-4 rounded-xl border border-[#CCC5B9]/20 hover:border-[#EB5E28] hover:bg-[#FFFCF2] transition-all">
                             <div class="w-10 h-10 bg-[#FFFCF2] rounded-lg flex items-center justify-center group-hover:bg-[#EB5E28] transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                                 </svg>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">Add User</p>
-                                <p class="text-xs text-[#CCC5B9]">Create new account</p>
-                            </div>
-                        </a>
-
-                        <a href="#" class="group flex items-center p-4 rounded-xl border border-[#CCC5B9]/20 hover:border-[#EB5E28] hover:bg-[#FFFCF2] transition-all">
-                            <div class="w-10 h-10 bg-[#FFFCF2] rounded-lg flex items-center justify-center group-hover:bg-[#EB5E28] transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            </div>
-                            <div class="ml-4">
                                 <p class="text-sm font-medium text-[#252422] group-hover:text-[#EB5E28] transition-colors">Manage Users</p>
-                                <p class="text-xs text-[#CCC5B9]">View and edit users</p>
+                                <p class="text-xs text-[#CCC5B9]">View and manage users</p>
                             </div>
                         </a>
 
-                        <a href="#" class="group flex items-center p-4 rounded-xl border border-[#CCC5B9]/20 hover:border-[#EB5E28] hover:bg-[#FFFCF2] transition-all">
+                        <a href="{{ route('admin.theses') }}" class="group flex items-center p-4 rounded-xl border border-[#CCC5B9]/20 hover:border-[#EB5E28] hover:bg-[#FFFCF2] transition-all">
                             <div class="w-10 h-10 bg-[#FFFCF2] rounded-lg flex items-center justify-center group-hover:bg-[#EB5E28] transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EB5E28] group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

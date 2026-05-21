@@ -57,9 +57,29 @@ Route::get('/author/messages/{user}', [App\Http\Controllers\Author\MessageContro
     ->middleware(['auth'])
     ->name('author.messages.show');
 
+Route::get('/author/works', [App\Http\Controllers\Author\WorksController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('author.works');
+
+Route::get('/author/works/{thesis}/edit', [App\Http\Controllers\Author\WorksController::class, 'edit'])
+    ->middleware(['auth'])
+    ->name('author.works.edit');
+
+Route::put('/author/works/{thesis}', [App\Http\Controllers\Author\WorksController::class, 'update'])
+    ->middleware(['auth'])
+    ->name('author.works.update');
+
+Route::delete('/author/works/{thesis}', [App\Http\Controllers\Author\WorksController::class, 'destroy'])
+    ->middleware(['auth'])
+    ->name('author.works.destroy');
+
 Route::post('/author/messages/{user}', [App\Http\Controllers\Author\MessageController::class, 'store'])
     ->middleware(['auth'])
     ->name('author.messages.send');
+
+Route::post('/author/messages/new', [App\Http\Controllers\Author\MessageController::class, 'newMessage'])
+    ->middleware(['auth'])
+    ->name('author.messages.new');
 
 Route::get('/author/recommend', [App\Http\Controllers\AuthorRecommendationController::class, 'create'])
     ->middleware(['auth'])
@@ -117,9 +137,29 @@ Route::get('/admin/users', [App\Http\Controllers\Admin\UserController::class, 'i
     ->middleware(['auth'])
     ->name('admin.users');
 
+Route::post('/admin/users', [App\Http\Controllers\Admin\UserController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('admin.users.store');
+
+Route::get('/admin/users/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])
+    ->middleware(['auth'])
+    ->name('admin.users.edit');
+
+Route::put('/admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])
+    ->middleware(['auth'])
+    ->name('admin.users.update');
+
+Route::delete('/admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])
+    ->middleware(['auth'])
+    ->name('admin.users.destroy');
+
 Route::get('/admin/inbox', [App\Http\Controllers\Admin\MessageController::class, 'index'])
     ->middleware(['auth'])
     ->name('admin.inbox');
+
+Route::post('/admin/messages/new', [App\Http\Controllers\Admin\MessageController::class, 'newMessage'])
+    ->middleware(['auth'])
+    ->name('admin.messages.new');
 
 Route::get('/admin/messages/{user}', [App\Http\Controllers\Admin\MessageController::class, 'show'])
     ->middleware(['auth'])
@@ -183,13 +223,29 @@ Route::get('/user/messages', [App\Http\Controllers\UserMessageController::class,
     ->middleware(['auth'])
     ->name('user.messages');
 
-Route::get('/user/messages/{author}', [App\Http\Controllers\UserMessageController::class, 'show'])
+Route::get('/user/messages/{user}', [App\Http\Controllers\UserMessageController::class, 'show'])
     ->middleware(['auth'])
     ->name('user.messages.show');
 
-Route::post('/user/messages/{author}', [App\Http\Controllers\UserMessageController::class, 'store'])
+Route::post('/user/messages/{user}', [App\Http\Controllers\UserMessageController::class, 'store'])
     ->middleware(['auth'])
     ->name('user.messages.send');
+
+Route::post('/user/messages/new', [App\Http\Controllers\UserMessageController::class, 'newMessage'])
+    ->middleware(['auth'])
+    ->name('user.messages.new');
+
+Route::get('/bookmarks', [App\Http\Controllers\BookmarkController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('bookmarks.index');
+
+Route::post('/theses/{thesis}/bookmark', [App\Http\Controllers\BookmarkController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('bookmarks.store');
+
+Route::delete('/theses/{thesis}/bookmark', [App\Http\Controllers\BookmarkController::class, 'destroy'])
+    ->middleware(['auth'])
+    ->name('bookmarks.destroy');
 
 Route::get('/admin/author-team', [App\Http\Controllers\AuthorRecommendationController::class, 'userTeam'])
     ->middleware(['auth'])
@@ -210,6 +266,23 @@ Route::post('/notifications/{notification}/mark-read', [App\Http\Controllers\Not
 Route::get('/co-author-application', [App\Http\Controllers\CoAuthorApplicationController::class, 'create'])
     ->middleware(['auth'])
     ->name('co-author-application.create');
+
+Route::get('/researcher/selection', function () {
+    return view('researcher-selection');
+})->middleware(['auth'])
+    ->name('researcher.selection');
+
+Route::get('/co-researcher-application/search', [App\Http\Controllers\CoResearcherApplicationController::class, 'search'])
+    ->middleware(['auth'])
+    ->name('co-researcher-application.search');
+
+Route::post('/co-researcher-application/search', [App\Http\Controllers\CoResearcherApplicationController::class, 'searchResults'])
+    ->middleware(['auth'])
+    ->name('co-researcher-application.search.results');
+
+Route::post('/theses/{thesis}/co-researcher-request', [App\Http\Controllers\CoResearcherApplicationController::class, 'request'])
+    ->middleware(['auth'])
+    ->name('co-researcher-application.request');
 
 Route::post('/co-author-application', [App\Http\Controllers\CoAuthorApplicationController::class, 'store'])
     ->middleware(['auth'])
