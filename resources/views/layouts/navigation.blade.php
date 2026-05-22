@@ -21,7 +21,7 @@
                             {{ __('Thesis') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.author.team')" :active="request()->routeIs('admin.author.team')">
-                            {{ __('Researcher') }}
+                            {{ __('Researchers') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.inbox')" :active="request()->routeIs('admin.inbox')">
                             {{ __('Messages') }}
@@ -159,7 +159,7 @@
                     {{ __('Author Recommendations') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.author.team')" :active="request()->routeIs('admin.author.team')">
-                    {{ __('Author ') }}
+                    {{ __('Researchers') }}
                 </x-responsive-nav-link>
             @elseif (auth()->user()?->isAuthor())
                 <x-responsive-nav-link :href="route('author.dashboard')" :active="request()->routeIs('author.dashboard')">

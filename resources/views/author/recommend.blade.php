@@ -24,7 +24,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('author.recommendation.store') }}">
+                    <form method="POST" action="{{ route('author.recommendation.store') }}" novalidate>
                         @csrf
 
                         <div class="space-y-6">
