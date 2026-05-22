@@ -64,11 +64,11 @@
                                         </form>
                                     @endif
                                     @if (isset($notification->data['thesis_id']))
-                                        <a href="{{ auth()->user()->isAdmin() ? route('admin.feed') : (auth()->user()->isAuthor() ? route('author.feed') : route('dashboard')) }}#thesis-{{ $notification->data['thesis_id'] }}{{ isset($notification->data['comment_id']) ? '-comment-' . $notification->data['comment_id'] : '' }}" target="_blank" class="p-2 rounded-lg bg-[#FFFCF2] text-[#403D39] hover:bg-[#EB5E28] hover:text-white transition-colors">
+                                        <button onclick="showThesisModal({{ $notification->data['thesis_id'] }}{{ isset($notification->data['comment_id']) ? ', ' . $notification->data['comment_id'] : '' }})" class="p-2 rounded-lg bg-[#FFFCF2] text-[#403D39] hover:bg-[#EB5E28] hover:text-white transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                             </svg>
-                                        </a>
+                                        </button>
                                     @elseif (isset($notification->data['application_id']))
                                         <a href="{{ route('co-author-applications.index') }}" target="_blank" class="p-2 rounded-lg bg-[#FFFCF2] text-[#403D39] hover:bg-[#EB5E28] hover:text-white transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -103,4 +103,152 @@
             </div>
         </div>
     </div>
+
+    <!-- Thesis Modal -->
+    <div id="thesisModal" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-black/50" onclick="closeThesisModal()"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6 border-b border-[#CCC5B9]/20 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-[#252422]">Thesis Details</h3>
+                    <button onclick="closeThesisModal()" class="p-2 rounded-lg hover:bg-[#FFFCF2] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#403D39]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="thesisModalContent" class="p-6">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showThesisModal(thesisId, commentId = null) {
+            const modal = document.getElementById('thesisModal');
+            const content = document.getElementById('thesisModalContent');
+
+            content.innerHTML = '<div class="text-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#EB5E28] mx-auto"></div></div>';
+            modal.classList.remove('hidden');
+
+            fetch(`/theses/${thesisId}/details`)
+                .then(response => response.json())
+                .then(data => {
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-lg font-bold text-[#252422]">${data.title}</h4>
+                                <p class="text-sm text-[#CCC5B9] mt-1">By ${data.author}</p>
+                                <p class="text-sm text-[#CCC5B9]">${data.thesis_date}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-[#403D39]">${data.description}</p>
+                            </div>
+                            @if (auth()->check())
+                            <div class="pt-4 border-t border-[#CCC5B9]/20">
+                                <form method="POST" action="{{ route('theses.comments.store', ':thesisId') }}" id="commentForm" onsubmit="submitComment(event, ${thesisId})">
+                                    @csrf
+                                    <div class="flex gap-3">
+                                        @if (auth()->user()->profile_image_path)
+                                            <img src="{{ asset('storage/' . auth()->user()->profile_image_path) }}" alt="{{ auth()->user()->name }}" class="h-8 w-8 rounded-full object-cover">
+                                        @else
+                                            <div class="h-8 w-8 rounded-full bg-[#FFFCF2] flex items-center justify-center">
+                                                <span class="text-xs font-semibold text-[#403D39]">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                                            </div>
+                                        @endif
+                                        <div class="flex-1">
+                                            <input type="text" name="comment" placeholder="Write a comment..."
+                                                class="w-full px-4 py-2 rounded-xl border border-[#CCC5B9]/40 bg-[#FFFCF2] text-[#252422] placeholder-[#CCC5B9] text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28]/10" required>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            @endif
+                            <div id="commentsContainer" class="space-y-3 mt-4">
+                                <!-- Comments will be loaded here -->
+                            </div>
+                        </div>
+                    `;
+
+                    // Load comments
+                    loadComments(thesisId, commentId);
+                })
+                .catch(error => {
+                    content.innerHTML = '<p class="text-red-500 text-center">Error loading thesis details.</p>';
+                });
+        }
+
+        function closeThesisModal() {
+            document.getElementById('thesisModal').classList.add('hidden');
+        }
+
+        function loadComments(thesisId, commentId = null) {
+            fetch(`/theses/${thesisId}/comments-json`)
+                .then(response => response.json())
+                .then(comments => {
+                    const container = document.getElementById('commentsContainer');
+                    if (comments.length === 0) {
+                        container.innerHTML = '<p class="text-sm text-[#CCC5B9] text-center">No comments yet.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = comments.map(comment => `
+                        <div class="flex gap-3 p-3 bg-[#FFFCF2] rounded-lg" id="comment-${comment.id}">
+                            ${comment.user.profile_image_path
+                                ? `<img src="/storage/${comment.user.profile_image_path}" alt="${comment.user.name}" class="h-8 w-8 rounded-full object-cover">`
+                                : `<div class="h-8 w-8 rounded-full bg-[#FFFCF2] flex items-center justify-center border border-[#CCC5B9]/20">
+                                    <span class="text-xs font-semibold text-[#403D39]">${comment.user.name.charAt(0).toUpperCase()}</span>
+                                </div>`
+                            }
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-[#252422]">${comment.user.name}</p>
+                                <p class="text-sm text-[#403D39]">${comment.comment}</p>
+                                <p class="text-xs text-[#CCC5B9] mt-1">${comment.created_at}</p>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Scroll to specific comment if provided
+                    if (commentId) {
+                        setTimeout(() => {
+                            const commentElement = document.getElementById(`comment-${commentId}`);
+                            if (commentElement) {
+                                commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                commentElement.classList.add('bg-[#EB5E28]/10');
+                                setTimeout(() => {
+                                    commentElement.classList.remove('bg-[#EB5E28]/10');
+                                }, 2000);
+                            }
+                        }, 300);
+                    }
+                });
+        }
+
+        function submitComment(event, thesisId) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            form.action = form.action.replace(':thesisId', thesisId);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    form.reset();
+                    loadComments(thesisId);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting comment:', error);
+            });
+        }
+    </script>
 </x-app-layout>

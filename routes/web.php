@@ -211,6 +211,14 @@ Route::post('/theses/{thesis}/comments', [App\Http\Controllers\CommentController
     ->middleware(['auth'])
     ->name('theses.comments.store');
 
+Route::get('/theses/{thesis}/details', [App\Http\Controllers\CommentController::class, 'getThesisDetails'])
+    ->middleware(['auth'])
+    ->name('theses.details');
+
+Route::get('/theses/{thesis}/comments-json', [App\Http\Controllers\CommentController::class, 'getCommentsJson'])
+    ->middleware(['auth'])
+    ->name('theses.comments.json');
+
 Route::delete('/comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])
     ->middleware(['auth'])
     ->name('comments.destroy');

@@ -71,4 +71,38 @@ class CommentController extends Controller
 
         return back();
     }
+
+    public function getThesisDetails(Thesis $thesis)
+    {
+        return response()->json([
+            'id' => $thesis->id,
+            'title' => $thesis->title,
+            'description' => $thesis->description,
+            'author' => $thesis->author,
+            'thesis_date' => $thesis->thesis_date->format('M d, Y'),
+        ]);
+    }
+
+    public function getCommentsJson(Thesis $thesis)
+    {
+        $comments = $thesis->comments()
+            ->with('user')
+            ->where('parent_id', null)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'comment' => $comment->comment,
+                    'created_at' => $comment->created_at->diffForHumans(),
+                    'user' => [
+                        'id' => $comment->user->id,
+                        'name' => $comment->user->name,
+                        'profile_image_path' => $comment->user->profile_image_path,
+                    ],
+                ];
+            });
+
+        return response()->json($comments);
+    }
 }
