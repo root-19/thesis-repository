@@ -213,7 +213,7 @@
                                 <div id="reply-form-${comment.id}" class="hidden mt-2 ml-4">
                                     <form onsubmit="submitReply(event, ${thesisId}, ${comment.id})">
                                         <div class="flex gap-2">
-                                            <input type="text" name="reply" placeholder="Write a reply..."
+                                            <input type="text" name="comment" placeholder="Write a reply..."
                                                 class="flex-1 px-3 py-2 rounded-lg border border-[#CCC5B9]/40 bg-[#FFFCF2] text-[#252422] placeholder-[#CCC5B9] text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28]/10" required>
                                             <button type="submit" class="px-3 py-2 rounded-lg bg-[#EB5E28] text-white text-xs font-medium hover:bg-[#d45220] transition-colors">Reply</button>
                                         </div>
