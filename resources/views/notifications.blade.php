@@ -53,7 +53,7 @@
                                         </form>
                                     @endif
                                     @if (isset($notification->data['thesis_id']))
-                                        <a href="{{ route('dashboard') }}#thesis-{{ $notification->data['thesis_id'] }}{{ isset($notification->data['comment_id']) ? '-comment-' . $notification->data['comment_id'] : '' }}" target="_blank" class="p-2 rounded-lg bg-[#FFFCF2] text-[#403D39] hover:bg-[#EB5E28] hover:text-white transition-colors">
+                                        <a href="{{ auth()->user()->isAdmin() ? route('admin.feed') : (auth()->user()->isAuthor() ? route('author.feed') : route('dashboard')) }}#thesis-{{ $notification->data['thesis_id'] }}{{ isset($notification->data['comment_id']) ? '-comment-' . $notification->data['comment_id'] : '' }}" target="_blank" class="p-2 rounded-lg bg-[#FFFCF2] text-[#403D39] hover:bg-[#EB5E28] hover:text-white transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                             </svg>

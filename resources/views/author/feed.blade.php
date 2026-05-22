@@ -416,5 +416,36 @@
             const repliesSection = document.getElementById('replies-' + commentId);
             repliesSection.classList.toggle('hidden');
         }
+
+        // Scroll to specific comment from notification link
+        document.addEventListener('DOMContentLoaded', function() {
+            const hash = window.location.hash;
+            if (hash && hash.includes('-comment-')) {
+                const parts = hash.split('-comment-');
+                if (parts.length === 2) {
+                    const thesisId = parts[0].replace('#thesis-', '');
+                    const commentId = parts[1];
+
+                    // Open comments section for this thesis
+                    const commentsSection = document.getElementById('comments-' + thesisId);
+                    if (commentsSection) {
+                        commentsSection.classList.remove('hidden');
+                    }
+
+                    // Scroll to specific comment
+                    setTimeout(function() {
+                        const commentElement = document.getElementById('comment-' + commentId);
+                        if (commentElement) {
+                            commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Highlight the comment briefly
+                            commentElement.classList.add('bg-[#EB5E28]/10');
+                            setTimeout(function() {
+                                commentElement.classList.remove('bg-[#EB5E28]/10');
+                            }, 2000);
+                        }
+                    }, 300);
+                }
+            }
+        });
     </script>
 </x-app-layout>
