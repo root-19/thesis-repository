@@ -128,7 +128,7 @@
     <div id="thesisModal" class="fixed inset-0 z-50 hidden">
         <div class="fixed inset-0 bg-black/50" onclick="closeThesisModal()"></div>
         <div class="fixed inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full h-[90vh] flex flex-col">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full h-[90vh] flex flex-col overflow-hidden">
                 <div class="p-6 border-b border-[#CCC5B9]/20 flex items-center justify-between flex-shrink-0">
                     <h3 class="text-xl font-bold text-[#252422]">Thesis Details</h3>
                     <button onclick="closeThesisModal()" class="p-2 rounded-lg hover:bg-[#FFFCF2] transition-colors">
