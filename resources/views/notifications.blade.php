@@ -39,6 +39,17 @@
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-[#252422]">{{ $notification->data['message'] }}</p>
+                                    @if (isset($notification->data['thesis_id']))
+                                        @php
+                                            $thesis = \App\Models\Thesis::find($notification->data['thesis_id']);
+                                        @endphp
+                                        @if ($thesis)
+                                            <div class="mt-3 p-3 bg-[#FFFCF2] rounded-lg border border-[#CCC5B9]/20">
+                                                <p class="text-sm font-semibold text-[#252422]">{{ $thesis->title }}</p>
+                                                <p class="text-xs text-[#CCC5B9] mt-1">{{ $thesis->author }}</p>
+                                            </div>
+                                        @endif
+                                    @endif
                                     <p class="text-xs text-[#CCC5B9] mt-1">{{ $notification->created_at->diffForHumans() }}</p>
                                 </div>
                                 <div class="flex items-center gap-2">
