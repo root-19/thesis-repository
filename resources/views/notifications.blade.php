@@ -108,8 +108,8 @@
     <div id="thesisModal" class="fixed inset-0 z-50 hidden">
         <div class="fixed inset-0 bg-black/50" onclick="closeThesisModal()"></div>
         <div class="fixed inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-                <div class="p-6 border-b border-[#CCC5B9]/20 flex items-center justify-between">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col">
+                <div class="p-6 border-b border-[#CCC5B9]/20 flex items-center justify-between flex-shrink-0">
                     <h3 class="text-xl font-bold text-[#252422]">Thesis Details</h3>
                     <button onclick="closeThesisModal()" class="p-2 rounded-lg hover:bg-[#FFFCF2] transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#403D39]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -117,7 +117,7 @@
                         </svg>
                     </button>
                 </div>
-                <div id="thesisModalContent" class="p-6">
+                <div id="thesisModalContent" class="p-6 overflow-y-auto flex-1">
                     <!-- Content will be loaded here -->
                 </div>
             </div>
@@ -202,12 +202,35 @@
                                 </div>`
                             }
                             <div class="flex-1">
-                                <p class="text-sm font-medium text-[#252422]">${comment.user.name}</p>
-                                <p class="text-sm text-[#403D39]">${comment.comment}</p>
-                                <p class="text-xs text-[#CCC5B9] mt-1">${comment.created_at}</p>
+                                <div class="bg-[#FFFCF2] rounded-xl p-3">
+                                    <p class="text-sm font-semibold text-[#252422]">${comment.user.name}</p>
+                                    <p class="text-sm text-[#403D39]">${comment.comment}</p>
+                                </div>
+                                <div class="flex items-center gap-4 mt-1 ml-2">
+                                    <button onclick="toggleReplyForm(${comment.id}, ${thesisId})" class="text-xs text-[#CCC5B9] hover:text-[#252422]">Reply</button>
+                                </div>
+                                <!-- Reply Form -->
+                                <div id="reply-form-${comment.id}" class="hidden mt-2 ml-4">
+                                    <form onsubmit="submitReply(event, ${thesisId}, ${comment.id})">
+                                        <div class="flex gap-2">
+                                            <input type="text" name="reply" placeholder="Write a reply..."
+                                                class="flex-1 px-3 py-2 rounded-lg border border-[#CCC5B9]/40 bg-[#FFFCF2] text-[#252422] placeholder-[#CCC5B9] text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28]/10" required>
+                                            <button type="submit" class="px-3 py-2 rounded-lg bg-[#EB5E28] text-white text-xs font-medium hover:bg-[#d45220] transition-colors">Reply</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- Replies Section -->
+                                <div id="replies-${comment.id}" class="mt-2 ml-4 space-y-2">
+                                    <!-- Replies will be loaded here -->
+                                </div>
                             </div>
                         </div>
                     `).join('');
+
+                    // Load replies for each comment
+                    comments.forEach(comment => {
+                        loadReplies(thesisId, comment.id);
+                    });
 
                     // Scroll to specific comment if provided
                     if (commentId) {
@@ -223,6 +246,67 @@
                         }, 300);
                     }
                 });
+        }
+
+        function loadReplies(thesisId, commentId) {
+            fetch(`/theses/${thesisId}/replies-json/${commentId}`)
+                .then(response => response.json())
+                .then(replies => {
+                    const container = document.getElementById(`replies-${commentId}`);
+                    if (replies.length === 0) {
+                        return;
+                    }
+
+                    container.innerHTML = replies.map(reply => `
+                        <div class="flex gap-2 p-2 bg-white rounded-lg border border-[#CCC5B9]/10">
+                            ${reply.user.profile_image_path
+                                ? `<img src="/storage/${reply.user.profile_image_path}" alt="${reply.user.name}" class="h-6 w-6 rounded-full object-cover">`
+                                : `<div class="h-6 w-6 rounded-full bg-[#FFFCF2] flex items-center justify-center border border-[#CCC5B9]/20">
+                                    <span class="text-xs font-semibold text-[#403D39]">${reply.user.name.charAt(0).toUpperCase()}</span>
+                                </div>`
+                            }
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-[#252422]">${reply.user.name}</p>
+                                <p class="text-xs text-[#403D39]">${reply.comment}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error loading replies:', error);
+                });
+        }
+
+        function toggleReplyForm(commentId, thesisId) {
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            replyForm.classList.toggle('hidden');
+        }
+
+        function submitReply(event, thesisId, parentCommentId) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            formData.append('parent_id', parentCommentId);
+
+            fetch(`{{ route('theses.comments.store', ':thesisId') }}`.replace(':thesisId', thesisId), {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    form.reset();
+                    form.classList.add('hidden');
+                    loadComments(thesisId);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting reply:', error);
+            });
         }
 
         function submitComment(event, thesisId) {

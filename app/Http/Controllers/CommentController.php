@@ -105,4 +105,26 @@ class CommentController extends Controller
 
         return response()->json($comments);
     }
+
+    public function getRepliesJson(Thesis $thesis, $commentId)
+    {
+        $replies = Comment::where('parent_id', $commentId)
+            ->with('user')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($reply) {
+                return [
+                    'id' => $reply->id,
+                    'comment' => $reply->comment,
+                    'created_at' => $reply->created_at->diffForHumans(),
+                    'user' => [
+                        'id' => $reply->user->id,
+                        'name' => $reply->user->name,
+                        'profile_image_path' => $reply->user->profile_image_path,
+                    ],
+                ];
+            });
+
+        return response()->json($replies);
+    }
 }

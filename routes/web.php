@@ -219,6 +219,10 @@ Route::get('/theses/{thesis}/comments-json', [App\Http\Controllers\CommentContro
     ->middleware(['auth'])
     ->name('theses.comments.json');
 
+Route::get('/theses/{thesis}/replies-json/{comment}', [App\Http\Controllers\CommentController::class, 'getRepliesJson'])
+    ->middleware(['auth'])
+    ->name('theses.replies.json');
+
 Route::delete('/comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])
     ->middleware(['auth'])
     ->name('comments.destroy');
