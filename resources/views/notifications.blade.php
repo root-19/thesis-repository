@@ -137,7 +137,7 @@
                         </svg>
                     </button>
                 </div>
-                <div id="thesisModalContent" class="p-6 overflow-y-auto flex-1 custom-scrollbar">
+                <div id="thesisModalContent" class="p-6 overflow-y-auto flex-1 custom-scrollbar min-h-0">
                     <!-- Content will be loaded here -->
                 </div>
             </div>
