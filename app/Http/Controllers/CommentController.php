@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, Thesis $thesis): RedirectResponse
+    public function store(Request $request, Thesis $thesis)
     {
         $request->validate([
             'comment' => ['required', 'string', 'max:1000'],
@@ -56,6 +56,11 @@ class CommentController extends Controller
                     'notifiable_id' => $parentComment->id,
                 ]);
             }
+        }
+
+        // Return JSON for AJAX requests
+        if ($request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json(['success' => true]);
         }
 
         return back()->with(['status' => 'Comment added successfully.', 'comment_submitted' => true, 'thesis_id' => $thesis->id]);
