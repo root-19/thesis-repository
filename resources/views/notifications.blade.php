@@ -106,17 +106,17 @@
 
     <style>
         .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #f1f1f1;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #CCC5B9;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
