@@ -104,6 +104,26 @@
         </div>
     </div>
 
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #CCC5B9;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #EB5E28;
+        }
+    </style>
+
     <!-- Thesis Modal -->
     <div id="thesisModal" class="fixed inset-0 z-50 hidden">
         <div class="fixed inset-0 bg-black/50" onclick="closeThesisModal()"></div>
@@ -117,7 +137,7 @@
                         </svg>
                     </button>
                 </div>
-                <div id="thesisModalContent" class="p-6 overflow-y-auto flex-1">
+                <div id="thesisModalContent" class="p-6 overflow-y-auto flex-1 custom-scrollbar">
                     <!-- Content will be loaded here -->
                 </div>
             </div>
