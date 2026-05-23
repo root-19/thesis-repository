@@ -20,8 +20,18 @@
                                 <div class="bg-[#FFFCF2] rounded-xl p-6 border border-[#CCC5B9]/20">
                                     <div class="flex items-start justify-between mb-4">
                                         <div>
-                                            <h3 class="text-lg font-semibold text-[#252422]">{{ $application->title }}</h3>
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <h3 class="text-lg font-semibold text-[#252422]">{{ $application->title }}</h3>
+                                                @if ($application->thesis_id)
+                                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#EB5E28]/10 text-[#EB5E28]">Co-Researcher Request</span>
+                                                @else
+                                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#403D39]/10 text-[#403D39]">New Application</span>
+                                                @endif
+                                            </div>
                                             <p class="text-sm text-[#CCC5B9]">Submitted by: {{ $application->user->name }} ({{ $application->user->email }})</p>
+                                            @if ($application->thesis_id && $application->thesis)
+                                                <p class="text-sm text-[#EB5E28] mt-1">For thesis ID: {{ $application->thesis->id }} — {{ $application->thesis->title }}</p>
+                                            @endif
                                         </div>
                                         <span class="px-3 py-1 rounded-full text-xs font-semibold
                                             @if ($application->status === 'pending') bg-[#FFFCF2] text-[#403D39] border border-[#CCC5B9]/20
@@ -89,7 +99,11 @@
                                             <form method="POST" action="{{ route('co-author-application.approve', $application) }}">
                                                 @csrf
                                                 <button type="submit" class="px-4 py-2 bg-[#EB5E28] text-white rounded-lg text-sm font-medium hover:bg-[#d45220] transition-colors">
-                                                    Approve & Upload Thesis
+                                                    @if ($application->thesis_id)
+                                                        Approve Co-Researcher
+                                                    @else
+                                                        Approve & Upload Thesis
+                                                    @endif
                                                 </button>
                                             </form>
 

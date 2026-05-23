@@ -77,6 +77,33 @@ class CoAuthorApplicationController extends Controller
     {
         $application->update(['status' => 'approved']);
 
+        // Check if this is a co-researcher request for an existing thesis
+        if ($application->thesis_id) {
+            $thesis = Thesis::findOrFail($application->thesis_id);
+
+            // Add applicant as co-author to the existing thesis
+            if (!$thesis->coAuthors()->where('user_id', $application->user_id)->exists()) {
+                $thesis->coAuthors()->attach($application->user_id);
+            }
+
+            // Change applicant role to author
+            $application->user->update(['role' => 'author']);
+
+            // Notify the applicant
+            NotificationModel::create([
+                'user_id' => $application->user_id,
+                'type' => 'co_researcher_approved',
+                'data' => [
+                    'title' => 'Co-Researcher Request Approved',
+                    'message' => "Your request to become a co-researcher for '{$thesis->title}' has been approved.",
+                    'thesis_id' => $thesis->id,
+                ],
+            ]);
+
+            return back()->with('status', 'Co-researcher request approved! User has been added as a co-author.');
+        }
+
+        // Otherwise, this is a new researcher application — create a new thesis
         // Change applicant role to author
         $application->user->update(['role' => 'author']);
 

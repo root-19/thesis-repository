@@ -26,9 +26,14 @@
                                                 </span>
                                             </div>
                                             <div>
-                                                <h3 class="text-lg font-semibold text-[#252422]">
-                                                    {{ $recommendation->recommendedUser ? $recommendation->recommendedUser->name : $recommendation->recommended_name }}
-                                                </h3>
+                                                <div class="flex items-center gap-2 mb-1">
+                                                    <h3 class="text-lg font-semibold text-[#252422]">
+                                                        {{ $recommendation->recommendedUser ? $recommendation->recommendedUser->name : $recommendation->recommended_name }}
+                                                    </h3>
+                                                    @if ($recommendation->recommender_id === $recommendation->recommended_user_id)
+                                                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#EB5E28]/10 text-[#EB5E28]">Co-Researcher Request</span>
+                                                    @endif
+                                                </div>
                                                 <p class="text-sm text-[#CCC5B9]">
                                                     {{ $recommendation->recommendedUser ? $recommendation->recommendedUser->email : $recommendation->recommended_email }}
                                                 </p>

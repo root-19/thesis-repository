@@ -33,14 +33,14 @@ class CoResearcherApplicationController extends Controller
 
     public function request(Thesis $thesis): RedirectResponse
     {
-        // Check if user already has a pending application for this thesis
-        $existingApplication = CoAuthorApplication::where('user_id', auth()->id())
+        // Check if user already has a pending recommendation for this thesis
+        $existingRecommendation = \App\Models\AuthorRecommendation::where('recommended_user_id', auth()->id())
             ->where('thesis_id', $thesis->id)
             ->where('status', 'pending')
             ->first();
 
-        if ($existingApplication) {
-            return back()->with('error', 'You already have a pending application for this thesis.');
+        if ($existingRecommendation) {
+            return back()->with('error', 'You already have a pending co-researcher request for this thesis.');
         }
 
         // Check if user is already a co-author
@@ -48,16 +48,13 @@ class CoResearcherApplicationController extends Controller
             return back()->with('error', 'You are already a co-researcher for this thesis.');
         }
 
-        CoAuthorApplication::create([
-            'user_id' => auth()->id(),
-            'thesis_id' => $thesis->id,
-            'title' => $thesis->title,
-            'description' => $thesis->description,
-            'thesis_date' => $thesis->thesis_date,
-            'pdf_file_path' => $thesis->pdf_file_path,
-            'department' => $thesis->department,
-            'keywords' => $thesis->keywords,
+        // Create a self-recommendation (user recommends themselves as co-researcher)
+        \App\Models\AuthorRecommendation::create([
+            'recommender_id' => auth()->id(),
+            'recommended_user_id' => auth()->id(),
+            'reason' => 'Requesting to become a co-researcher for this thesis.',
             'status' => 'pending',
+            'thesis_id' => $thesis->id,
         ]);
 
         // Notify all admins about the co-researcher request
@@ -65,7 +62,7 @@ class CoResearcherApplicationController extends Controller
         foreach ($admins as $admin) {
             Notification::create([
                 'user_id' => $admin->id,
-                'type' => 'co_researcher_request',
+                'type' => 'researcher_recommendation',
                 'data' => [
                     'title' => 'Co-Researcher Request',
                     'message' => auth()->user()->name . ' has requested to become a co-researcher for thesis: ' . $thesis->title,
@@ -75,6 +72,7 @@ class CoResearcherApplicationController extends Controller
             ]);
         }
 
-        return back()->with('status', 'Co-researcher request sent to admin for approval.');
+        return redirect()->route('author.recommendation.create')
+            ->with('status', 'Co-researcher request sent to admin for approval.');
     }
 }
