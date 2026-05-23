@@ -32,7 +32,7 @@
                     <!-- Search Bar -->
                     <div class="max-w-2xl mx-auto">
                         <div class="relative">
-                            <input type="text" id="search-input" placeholder="Search thesis by title, author, or department..."
+                            <input type="text" id="search-input" placeholder="Search thesis by title, author, keywords, or year..."
                                 class="w-full px-6 py-4 rounded-2xl border-2 border-[#CCC5B9]/40 bg-white text-[#252422] placeholder-[#CCC5B9] focus:border-[#EB5E28] focus:ring-4 focus:ring-[#EB5E28]/10 transition-all text-lg shadow-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-[#CCC5B9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -63,7 +63,8 @@
                          data-title="{{ strtolower($thesis->title) }}"
                          data-author="{{ strtolower($thesis->author) }}"
                          data-uploader="{{ strtolower($thesis->user->name) }}"
-                         data-keywords="{{ strtolower($thesis->keywords ?? '') }}">
+                         data-keywords="{{ strtolower($thesis->keywords ?? '') }}"
+                         data-year="{{ $thesis->thesis_date->format('Y') }}">
                         <!-- Header with uploader and author info -->
                         <div class="p-4 border-b border-[#CCC5B9]/20 flex items-center justify-between">
                             <div class="flex items-center gap-3">
@@ -116,7 +117,7 @@
                                     $isBookmarked = \App\Models\Bookmark::where('user_id', auth()->id())->where('thesis_id', $thesis->id)->exists();
                                 @endphp
                                 @if ($isBookmarked)
-                                    <form method="POST" action="{{ route('bookmarks.destroy', $thesis) }}">
+                                    <form method="POST" action="{{ route('bookmarks.destroy', $thesis) }}" class="bookmark-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-2 rounded-full hover:bg-[#FFFCF2] transition-colors group" title="Remove bookmark">
@@ -126,7 +127,7 @@
                                         </button>
                                     </form>
                                 @else
-                                    <form method="POST" action="{{ route('bookmarks.store', $thesis) }}">
+                                    <form method="POST" action="{{ route('bookmarks.store', $thesis) }}" class="bookmark-form">
                                         @csrf
                                         <button type="submit" class="p-2 rounded-full hover:bg-[#FFFCF2] transition-colors group" title="Bookmark this study">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#CCC5B9] group-hover:text-[#EB5E28] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -372,9 +373,10 @@
                 const title = item.dataset.title;
                 const author = item.dataset.author;
                 const keywords = item.dataset.keywords;
+                const year = item.dataset.year;
                 
                 // Check if matches search term
-                if (title.includes(searchTerm) || author.includes(searchTerm) || keywords.includes(searchTerm)) {
+                if (title.includes(searchTerm) || author.includes(searchTerm) || keywords.includes(searchTerm) || year.includes(searchTerm)) {
                     const thesisElement = item.closest('.thesis-feed-item');
                     const titleElement = thesisElement.querySelector('h3');
                     const titleText = titleElement ? titleElement.textContent : '';
@@ -436,8 +438,9 @@
                 const author = item.dataset.author;
                 const uploader = item.dataset.uploader;
                 const keywords = item.dataset.keywords;
+                const year = item.dataset.year;
 
-                const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || uploader.includes(searchTerm) || keywords.includes(searchTerm);
+                const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || uploader.includes(searchTerm) || keywords.includes(searchTerm) || year.includes(searchTerm);
 
                 if (matchesSearch) {
                     item.style.display = 'block';
@@ -472,6 +475,65 @@
                 }
             });
         @endif
+
+        // Handle bookmark forms asynchronously (no page reload / scroll to top)
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.bookmark-form').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const button = form.querySelector('button[type="submit"]');
+                    const svg = button.querySelector('svg');
+                    const action = form.getAttribute('action');
+                    const method = form.querySelector('input[name="_method"]') ? form.querySelector('input[name="_method"]').value : 'POST';
+
+                    fetch(action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: new FormData(form)
+                    })
+                    .then(function(response) {
+                        if (response.ok) {
+                            // Toggle bookmark icon appearance
+                            if (method === 'DELETE') {
+                                // Was bookmarked, now removed
+                                svg.setAttribute('fill', 'none');
+                                svg.setAttribute('stroke', 'currentColor');
+                                svg.setAttribute('stroke-width', '2');
+                                svg.classList.remove('text-[#EB5E28]');
+                                svg.classList.add('text-[#CCC5B9]');
+                                button.setAttribute('title', 'Bookmark this study');
+                                form.setAttribute('action', action.replace('/destroy', '/store').replace('?_method=DELETE', ''));
+                                // Remove _method input
+                                const methodInput = form.querySelector('input[name="_method"]');
+                                if (methodInput) methodInput.remove();
+                            } else {
+                                // Was not bookmarked, now bookmarked
+                                svg.setAttribute('fill', 'currentColor');
+                                svg.removeAttribute('stroke');
+                                svg.removeAttribute('stroke-width');
+                                svg.classList.remove('text-[#CCC5B9]');
+                                svg.classList.add('text-[#EB5E28]');
+                                button.setAttribute('title', 'Remove bookmark');
+                                form.setAttribute('action', action.replace('/store', '/destroy'));
+                                // Add _method input
+                                const methodInput = document.createElement('input');
+                                methodInput.type = 'hidden';
+                                methodInput.name = '_method';
+                                methodInput.value = 'DELETE';
+                                form.insertBefore(methodInput, form.firstChild.nextSibling);
+                            }
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error('Bookmark error:', err);
+                    });
+                });
+            });
+        });
 
         // Scroll to specific comment from notification link
         document.addEventListener('DOMContentLoaded', function() {

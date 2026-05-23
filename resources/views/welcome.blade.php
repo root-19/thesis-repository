@@ -54,29 +54,58 @@
         $stats = $stats ?? ['total' => 0, 'years' => 0, 'downloads' => 0];
     @endphp
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-[#403D39]/10">
-        <div class="w-full max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center font-bold text-xl text-[#252422]">
-                <img src="/logo.png" alt="Arcoe" class="h-25 w-40">
-                {{-- <span>Arcoe</span> --}}
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-[#403D39]/10 bg-white/80 backdrop-blur-md">
+    
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center">
+            <img 
+                src="/logo.png" 
+                alt="Arcoe" 
+                class="h-24 md:h-28 w-auto object-contain"
+            >
+        </a>
+
+        <!-- Navigation -->
+        <div class="flex items-center gap-8">
+
+            <a href="#features"
+               class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">
+                Features
             </a>
-            <div class="flex items-center gap-6">
-                <a href="#features" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Features</a>
-                <a href="#research" class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Research</a>
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 rounded-full bg-[#252422] text-white text-sm font-semibold hover:bg-[#403D39] transition-colors">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full bg-[#EB5E28] text-white text-sm font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">Create account</a>
-                        @endif
-                    @endauth
-                @endif
-            </div>
+
+            <a href="#research"
+               class="hidden md:block text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">
+                Research
+            </a>
+
+            @if (Route::has('login'))
+                @auth
+                    <a href="{{ url('/dashboard') }}"
+                       class="px-5 py-2.5 rounded-full bg-[#252422] text-white text-sm font-semibold hover:bg-[#403D39] transition-colors">
+                        Dashboard
+                    </a>
+                @else
+
+                    <a href="{{ route('login') }}"
+                       class="text-sm font-medium text-[#403D39] hover:text-[#EB5E28] transition-colors">
+                        Log in
+                    </a>
+
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                           class="px-6 py-3 rounded-full bg-[#EB5E28] text-white text-sm font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">
+                            Create account
+                        </a>
+                    @endif
+
+                @endauth
+            @endif
+
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Hero Section -->
     <section class="hero-gradient pt-32 pb-20 md:pt-44 md:pb-28">
@@ -204,14 +233,14 @@
 
             @if ($thesisCollection->isNotEmpty())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="authorGrid">
-                    @foreach ($thesisCollection->take(6) as $thesis)
+                    @foreach ($thesisCollection as $thesis)
                         @php
                             $author = $thesis->author ?? 'Unknown';
                             $department = $thesis->department ?? 'General';
                             $year = $thesis->thesis_date->format('Y');
                             $title = $thesis->title;
                         @endphp
-                        <article class="group bg-white rounded-3xl p-7 border border-[#CCC5B9]/20 hover:border-[#EB5E28]/20 hover:shadow-2xl hover:shadow-[#EB5E28]/5 transition-all duration-300" data-author-card data-filter-text="{{ strtolower(collect([$author, $title, $department])->filter()->implode(' ')) }}">
+                        <article class="group bg-white rounded-3xl p-7 border border-[#CCC5B9]/20 hover:border-[#EB5E28]/20 hover:shadow-2xl hover:shadow-[#EB5E28]/5 transition-all duration-300" data-author-card data-filter-text="{{ strtolower(collect([$author, $title, $department, $year, $thesis->keywords])->filter()->implode(' ')) }}">
                             <div class="flex items-center justify-between mb-4">
                                 <span class="px-3 py-1 rounded-full bg-[#EB5E28]/10 text-[#EB5E28] text-xs font-semibold">{{ $department }}</span>
                                 <span class="text-sm text-[#CCC5B9] font-medium">{{ $year }}</span>
@@ -272,9 +301,9 @@
     <section class="py-24 bg-[#252422]">
         <div class="w-full max-w-4xl mx-auto px-6 text-center">
             <h2 class="text-3xl md:text-5xl font-extrabold text-[#FFFCF2] mb-6">Ready to Explore Academic Research?</h2>
-            <p class="text-lg text-[#CCC5B9] mb-10 max-w-2xl mx-auto">Start discovering thesis papers, capstone projects, and scholarly articles from students and researchers.</p>
+            <p class="text-lg text-[#CCC5B9] mb-10 max-w-2xl mx-auto">Start accessing thesis papers created by COE students from PUP.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="#research" class="px-8 py-4 rounded-full bg-[#EB5E28] text-white font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">Browse Research Papers</a>
+                <a href="#research" class="px-8 py-4 rounded-full bg-[#EB5E28] text-white font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">Browse thesis Papers</a>
                 <a href="#features" class="px-8 py-4 rounded-full bg-transparent border border-[#CCC5B9]/30 text-[#FFFCF2] font-semibold hover:bg-[#FFFCF2]/10 transition-colors">Learn More</a>
             </div>
         </div>

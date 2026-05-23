@@ -51,6 +51,12 @@ class CoResearcherApplicationController extends Controller
         CoAuthorApplication::create([
             'user_id' => auth()->id(),
             'thesis_id' => $thesis->id,
+            'title' => $thesis->title,
+            'description' => $thesis->description,
+            'thesis_date' => $thesis->thesis_date,
+            'pdf_file_path' => $thesis->pdf_file_path,
+            'department' => $thesis->department,
+            'keywords' => $thesis->keywords,
             'status' => 'pending',
         ]);
 

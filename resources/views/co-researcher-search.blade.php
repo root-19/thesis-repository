@@ -21,7 +21,8 @@
                         </div>
                     @endif
 
-                    <form method="GET" action="{{ route('co-researcher-application.search') }}" class="mb-6">
+                    <form method="POST" action="{{ route('co-researcher-application.search.results') }}" class="mb-6">
+                        @csrf
                         <div class="flex gap-4">
                             <input type="text" name="query" value="{{ $query ?? '' }}" placeholder="Search by title, description, or keywords..."
                                 class="flex-1 rounded-xl border-[#CCC5B9]/40 px-4 py-3 text-sm focus:border-[#EB5E28] focus:ring-[#EB5E28] bg-[#FFFCF2]/50 placeholder-[#CCC5B9]" />

@@ -13,6 +13,7 @@ class CoAuthorApplication extends Model
 
     protected $fillable = [
         'user_id',
+        'thesis_id',
         'title',
         'description',
         'thesis_date',

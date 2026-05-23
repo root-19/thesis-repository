@@ -31,15 +31,30 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- PDF Preview -->
+                                    <div class="bg-white rounded-xl p-4 flex items-center gap-4 mb-4 border border-[#CCC5B9]/20">
+                                        <div class="w-12 h-12 bg-[#FFFCF2] rounded-lg flex items-center justify-center shadow-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#EB5E28]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-[#252422]">Thesis Document</p>
+                                            <p class="text-xs text-[#CCC5B9]">PDF file</p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <a href="{{ asset('storage/' . $bookmark->thesis->pdf_file_path) }}" target="_blank" class="px-4 py-2 rounded-full bg-[#EB5E28] text-white text-sm font-medium hover:bg-[#d45220] transition-colors">
+                                                View PDF
+                                            </a>
+                                        </div>
+                                    </div>
                                     
                                     <div class="flex items-center gap-2 pt-4 border-t border-[#CCC5B9]/20">
-                                        <a href="#thesis-{{ $bookmark->thesis->id }}" class="flex-1 text-center px-4 py-2 rounded-lg bg-[#252422] text-white text-sm font-medium hover:bg-[#403D39] transition-colors">
-                                            View
-                                        </a>
-                                        <form method="POST" action="{{ route('bookmarks.destroy', $bookmark->thesis) }}">
+                                        <form method="POST" action="{{ route('bookmarks.destroy', $bookmark->thesis) }}" class="flex-1">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="px-4 py-2 rounded-lg border border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors">
+                                            <button type="submit" class="w-full px-4 py-2 rounded-lg border border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors">
                                                 Remove
                                             </button>
                                         </form>
