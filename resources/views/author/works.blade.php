@@ -56,8 +56,8 @@
                                         </div>
                                         
                                         <div class="flex flex-row lg:flex-col gap-2">
-                                            <a href="{{ route('dashboard') }}#thesis-{{ $thesis->id }}" target="_blank" class="px-4 py-2 rounded-lg bg-[#252422] text-white text-sm font-medium hover:bg-[#403D39] transition-colors">
-                                                View
+                                            <a href="{{ asset('storage/' . $thesis->pdf_file_path) }}" target="_blank" class="px-4 py-2 rounded-lg bg-[#252422] text-white text-sm font-medium hover:bg-[#403D39] transition-colors">
+                                                View PDF
                                             </a>
                                             <a href="{{ route('author.works.edit', $thesis) }}" class="px-4 py-2 rounded-lg bg-[#EB5E28] text-white text-sm font-medium hover:bg-[#d45220] transition-colors">
                                                 Edit
