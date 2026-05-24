@@ -64,7 +64,7 @@
                                     Cancel
                                 </a>
                                 <button type="submit" class="px-6 py-2 rounded-lg bg-[#EB5E28] text-white text-sm font-semibold hover:bg-[#d45220] transition-colors shadow-lg shadow-[#EB5E28]/20">
-                                    Submit for Approval
+                                    Update
                                 </button>
                             </div>
                         </div>

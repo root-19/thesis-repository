@@ -82,7 +82,7 @@ class WorksController extends Controller
             ]);
         }
 
-        return back()->with('status', 'Edit request submitted for admin approval.');
+        return redirect()->route('author.works')->with('status', 'Edit request submitted for admin approval.');
     }
 
     public function destroy(Thesis $thesis): RedirectResponse
