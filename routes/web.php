@@ -102,7 +102,7 @@ Route::get('/dashboard', function () {
         if (auth()->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif (auth()->user()->isAuthor()) {
-            return redirect()->route('author.feed');
+            return redirect()->route('author.dashboard');
         } else {
             return redirect()->route('user.dashboard');
         }

@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user && $user->isAuthor()) {
-            return redirect()->route('author.feed');
+            return redirect()->route('author.dashboard');
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);

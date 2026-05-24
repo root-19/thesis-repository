@@ -36,12 +36,12 @@
                             {{ __('Researcher Recommendations') }}
                         </x-nav-link>
                     @elseif (auth()->user()?->isAuthor())
-                        <x-nav-link :href="route('author.feed')" :active="request()->routeIs('author.feed')">
+                        <x-nav-link :href="route('author.dashboard')" :active="request()->routeIs('author.dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
-                        {{-- <x-nav-link :href="route('author.dashboard')" :active="request()->routeIs('author.dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link> --}}
+                        <x-nav-link :href="route('author.feed')" :active="request()->routeIs('author.feed')">
+                            {{ __('Newsfeed') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('author.inbox')" :active="request()->routeIs('author.inbox')">
                             {{ __('Message') }}
                         </x-nav-link>
