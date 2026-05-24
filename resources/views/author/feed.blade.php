@@ -6,10 +6,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#EB5E28]/10 text-[#EB5E28] text-sm font-semibold mb-6">
-                        <span class="w-2 h-2 rounded-full bg-[#EB5E28] animate-pulse"></span>
-                        Arcoe
-                    </div>
+                   
 
                     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-[#252422] mb-4">
                         Discover Knowledge.<br>

@@ -139,7 +139,7 @@ class CoAuthorApplicationController extends Controller
             'type' => 'application_approved',
             'data' => [
                 'title' => 'Application Approved',
-                'message' => "Your co-author application for '{$application->title}' has been approved and your thesis has been uploaded.",
+                'message' => "Your application for '{$application->title}' has been approved and your research has been uploaded.",
                 'thesis_id' => $thesis->id,
             ],
         ]);

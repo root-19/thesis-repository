@@ -125,6 +125,16 @@ class AuthorRecommendationController extends Controller
                 $user->update(['role' => 'author']);
             }
 
+            // Notify the user that their application has been approved
+            \App\Models\Notification::create([
+                'user_id' => $user->id,
+                'type' => 'application_approved',
+                'data' => [
+                    'title' => 'Application Approved',
+                    'message' => 'Your application to become an author has been approved.',
+                ],
+            ]);
+
             // Add the user as a co-author to the thesis if thesis_id is set
             if ($recommendation->thesis_id && $user) {
                 $thesis = \App\Models\Thesis::find($recommendation->thesis_id);

@@ -73,8 +73,8 @@ class WorksController extends Controller
                 'user_id' => $admin->id,
                 'type' => 'thesis_edit_request',
                 'data' => [
-                    'title' => 'Thesis Edit Request',
-                    'message' => auth()->user()->name . ' has requested an edit for thesis: ' . $thesis->title,
+                    'title' => 'Research Edit Request',
+                    'message' => auth()->user()->name . ' has requested to edit their research: ' . $thesis->title,
                     'thesis_id' => $thesis->id,
                     'original_data' => $originalData,
                     'new_data' => $request->only(['title', 'description', 'thesis_date', 'keywords']),
@@ -99,8 +99,8 @@ class WorksController extends Controller
                 'user_id' => $admin->id,
                 'type' => 'thesis_delete_request',
                 'data' => [
-                    'title' => 'Thesis Delete Request',
-                    'message' => auth()->user()->name . ' has requested to delete thesis: ' . $thesis->title,
+                    'title' => 'Research Delete Request',
+                    'message' => auth()->user()->name . ' has requested to delete their research: ' . $thesis->title,
                     'thesis_id' => $thesis->id,
                 ],
             ]);
