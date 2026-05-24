@@ -68,8 +68,9 @@
                                 $department = $thesis->department ?? 'General';
                                 $year = $thesis->thesis_date->format('Y');
                                 $title = $thesis->title;
+                                $keywords = $thesis->keywords ?? '';
                             @endphp
-                            <article class="group bg-white rounded-3xl p-7 border border-[#CCC5B9]/20 hover:border-[#EB5E28]/20 hover:shadow-2xl hover:shadow-[#EB5E28]/5 transition-all duration-300" data-author-card data-filter-text="{{ strtolower(collect([$author, $title, $department])->filter()->implode(' ')) }}">
+                            <article class="group bg-white rounded-3xl p-7 border border-[#CCC5B9]/20 hover:border-[#EB5E28]/20 hover:shadow-2xl hover:shadow-[#EB5E28]/5 transition-all duration-300" data-author-card data-filter-text="{{ strtolower(collect([$author, $title, $department, $keywords])->filter()->implode(' ')) }}">
                                 <div class="flex items-center justify-between mb-4">
                                     <span class="px-3 py-1 rounded-full bg-[#EB5E28]/10 text-[#EB5E28] text-xs font-semibold">{{ $department }}</span>
                                     <span class="text-sm text-[#CCC5B9] font-medium">{{ $year }}</span>
@@ -190,10 +191,16 @@
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const items = document.querySelectorAll('[data-author-card]');
 
+            // Split search term by spaces and dots to get individual words
+            const searchWords = searchTerm.split(/[\s.]+/).filter(word => word.length > 0);
+
             items.forEach(item => {
                 const filterText = item.dataset.filterText || '';
-                
-                if (filterText.includes(searchTerm)) {
+
+                // Check if ANY of the search words match
+                const matches = searchWords.length === 0 || searchWords.some(word => filterText.includes(word));
+
+                if (matches) {
                     item.style.display = 'block';
                 } else {
                     item.style.display = 'none';
