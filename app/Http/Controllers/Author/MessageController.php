@@ -23,6 +23,12 @@ class MessageController extends Controller
         return view('author.inbox', compact('messages'));
     }
 
+    public function create(): View
+    {
+        $users = User::where('id', '!=', auth()->id())->get();
+        return view('author.new-message', compact('users'));
+    }
+
     public function show(User $user): View
     {
         $messages = Message::with('sender', 'receiver')

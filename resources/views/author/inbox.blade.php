@@ -8,9 +8,9 @@
                         <h3 class="text-lg font-semibold text-[#252422]">Inbox</h3>
                         <p class="text-sm text-[#CCC5B9] mt-1">All messages</p>
                     </div>
-                    <a href="#" onclick="openNewMessageModal()" class="px-4 py-2 rounded-full bg-[#EB5E28] text-white text-sm font-medium hover:bg-[#d45220] transition-colors">
+                    {{-- <a href="#" onclick="openNewMessageModal()" class="px-4 py-2 rounded-full bg-[#EB5E28] text-white text-sm font-medium hover:bg-[#d45220] transition-colors">
                         New Message
-                    </a>
+                    </a> --}}
                 </div>
                 <div class="divide-y divide-[#CCC5B9]/20">
                     @forelse($messages as $message)
@@ -52,7 +52,7 @@
                     </svg>
                 </button>
             </div>
-            <form method="POST" action="{{ route('author.messages.new') }}">
+            <form method="POST" action="/author/messages/new">
                 @csrf
                 <div class="p-6 space-y-4">
                     <div>

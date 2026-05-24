@@ -77,9 +77,13 @@ Route::post('/author/messages/{user}', [App\Http\Controllers\Author\MessageContr
     ->middleware(['auth'])
     ->name('author.messages.send');
 
-Route::post('/author/messages/new', [App\Http\Controllers\Author\MessageController::class, 'newMessage'])
+Route::get('/author/messages/new', [App\Http\Controllers\Author\MessageController::class, 'create'])
     ->middleware(['auth'])
     ->name('author.messages.new');
+
+Route::post('/author/messages/new', [App\Http\Controllers\Author\MessageController::class, 'newMessage'])
+    ->middleware(['auth'])
+    ->name('author.messages.send.new');
 
 Route::get('/author/recommend', [App\Http\Controllers\AuthorRecommendationController::class, 'create'])
     ->middleware(['auth'])
@@ -98,7 +102,7 @@ Route::get('/dashboard', function () {
         if (auth()->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif (auth()->user()->isAuthor()) {
-            return redirect()->route('author.dashboard');
+            return redirect()->route('author.feed');
         } else {
             return redirect()->route('user.dashboard');
         }
