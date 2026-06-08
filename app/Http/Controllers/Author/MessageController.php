@@ -15,10 +15,18 @@ class MessageController extends Controller
 {
     public function index(): View
     {
-        $messages = Message::with('sender')
+        $messages = Message::with('sender', 'receiver')
+            ->where(function ($query) {
+                $query->where('sender_id', auth()->id())
+                    ->orWhere('receiver_id', auth()->id());
+            })
             ->orderBy('created_at', 'desc')
             ->get()
-            ->unique('sender_id');
+            ->unique(function ($message) {
+                return $message->sender_id === auth()->id()
+                    ? $message->receiver_id
+                    : $message->sender_id;
+            });
 
         return view('author.inbox', compact('messages'));
     }
@@ -33,8 +41,13 @@ class MessageController extends Controller
     {
         $messages = Message::with('sender', 'receiver')
             ->where(function ($query) use ($user) {
-                $query->where('sender_id', $user->id)
-                    ->orWhere('receiver_id', $user->id);
+                $query->where(function ($q) use ($user) {
+                    $q->where('sender_id', auth()->id())
+                        ->where('receiver_id', $user->id);
+                })->orWhere(function ($q) use ($user) {
+                    $q->where('sender_id', $user->id)
+                        ->where('receiver_id', auth()->id());
+                });
             })
             ->orderBy('created_at', 'asc')
             ->get();
