@@ -14,14 +14,21 @@
                 </div>
                 <div class="divide-y divide-[#CCC5B9]/20">
                     @forelse($messages as $message)
-                        <a href="{{ route('admin.messages.show', $message->sender) }}" class="block hover:bg-[#FFFCF2] transition-colors">
+                        @php
+                            $otherUser = $message->sender_id === auth()->id() ? $message->receiver : $message->sender;
+                        @endphp
+                        <a href="{{ route('admin.messages.show', $otherUser) }}" class="block hover:bg-[#FFFCF2] transition-colors">
                             <div class="p-6 flex items-start gap-4">
-                                <div class="w-12 h-12 bg-[#FFFCF2] rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span class="text-lg font-bold text-[#EB5E28]">{{ strtoupper(substr($message->sender->name, 0, 1)) }}</span>
-                                </div>
+                                @if ($otherUser->profile_image_path)
+                                    <img src="{{ asset('storage/' . $otherUser->profile_image_path) }}" alt="{{ $otherUser->name }}" class="h-12 w-12 rounded-full object-cover">
+                                @else
+                                    <div class="h-12 w-12 bg-[#FFFCF2] rounded-full flex items-center justify-center flex-shrink-0">
+                                        <span class="text-lg font-bold text-[#EB5E28]">{{ strtoupper(substr($otherUser->name, 0, 1)) }}</span>
+                                    </div>
+                                @endif
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between mb-1">
-                                        <h4 class="text-sm font-semibold text-[#252422]">{{ $message->sender->name }}</h4>
+                                        <h4 class="text-sm font-semibold text-[#252422]">{{ $otherUser->name }}</h4>
                                         <span class="text-xs text-[#CCC5B9]">{{ $message->created_at->diffForHumans() }}</span>
                                     </div>
                                     <p class="text-sm text-[#403D39] truncate">{{ $message->message }}</p>

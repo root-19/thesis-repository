@@ -92,20 +92,20 @@ class WorksController extends Controller
             abort(403);
         }
 
-        // Notify all admins about the delete request
-        $admins = User::where('role', 'admin')->get();
-        foreach ($admins as $admin) {
-            Notification::create([
-                'user_id' => $admin->id,
-                'type' => 'thesis_delete_request',
-                'data' => [
-                    'title' => 'Research Delete Request',
-                    'message' => auth()->user()->name . ' has requested to delete their research: ' . $thesis->title,
-                    'thesis_id' => $thesis->id,
-                ],
-            ]);
+        // Delete co-authors relationship first
+        $thesis->coAuthors()->detach();
+
+        // Delete associated files if they exist
+        if ($thesis->pdf_file_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($thesis->pdf_file_path);
+        }
+        if ($thesis->cover_image_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($thesis->cover_image_path);
         }
 
-        return back()->with('status', 'Delete request submitted for admin approval.');
+        // Delete the thesis
+        $thesis->delete();
+
+        return back()->with('status', 'Research deleted successfully.');
     }
 }
